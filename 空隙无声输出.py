@@ -1,4 +1,4 @@
 f=input()
 d=f.split(' ')
 for i in range(len(d)):
-    print(d)
+    print(d[i],end='')
