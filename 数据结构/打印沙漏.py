@@ -1,9 +1,9 @@
 def main():
     rawInput=input()
     num,zifu=rawInput.split(' ')
-    m=hangshu(eval(num))
-    dayinshuchu(m,zifu)
-    zongshu=tongjishuchu(m)
+    jisuanhangshu=hangshu(eval(num))  #计算总共多少行
+    dayinshuchu(jisuanhangshu,zifu)
+    zongshu=tongjishuchu(jisuanhangshu)
     print(eval(num)-zongshu,end='')
 def dayinshuchu(m,zifu):
     for i in range(0,m):
@@ -22,14 +22,18 @@ def tongjishuchu(hangshu):
     
 def hangshu(num):
     sum=0
-    j=0
-    
-    for i in range(num):
+    i=1
+    j=0   
+    while i>=1:
         sum=tongjishuchu(i)
         j=i
-        if sum>num:
+        i+=1
+        if sum>=num:
             break
-    return j-1
+    if j>2:
+        return j-1
+    else:
+        return j
 
 def shuchu(hangDangqian,hangZongji,zifu):
     data=[]
