@@ -8,5 +8,4 @@ def main():
         else :
            n=3*n+1
     print(step)
-
 main()
