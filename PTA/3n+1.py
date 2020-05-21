@@ -7,6 +7,5 @@ def main():
            step+=1
         else :
            n=3*n+1
-           step=0
     print(step)
 main()
