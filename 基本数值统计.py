@@ -7,6 +7,7 @@ def getNum():       #获取用户不定长度的输入
     return num
 
 
+    
 def mean(numbers):  #计算平均值
     sum=0    
     for i in range(len(numbers)):
