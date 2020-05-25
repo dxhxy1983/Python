@@ -4,23 +4,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
             "type": "shell",
-            "command": "msbuild",
+            "label": "g++.exe build active file", //这里注意一下，见下文
+            "command": "C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin\\g++.exe",
             "args": [
-                // Ask msbuild to generate full paths for file names.
-                "/property:GenerateFullPaths=true",
-                "/t:build",
-                // Do not generate summary otherwise it leads to duplicate errors in Problems panel
-                "/consoleloggerparameters:NoSummary"
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
-            "group": "build",
-            "presentation": {
-                // Reveal the output only if unrecognized errors occur.
-                "reveal": "silent"
+            "options": {
+                "cwd": "C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
-            "problemMatcher": "$msCompile"
-        }
-    ]
+            "problemMatcher": [
+                "$gcc"
+            ]
 }
+    ]
