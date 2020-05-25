@@ -5,8 +5,8 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "g++.exe build active file", //这里注意一下，见下文
-            "command": "C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin\\g++.exe",
+            "label": "g++", //这里注意一下，见下文
+            "command": "d:\\MinGW\\bin\\g++.exe",
             "args": [
                 "-g",
                 "${file}",
@@ -14,7 +14,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin"
+                "cwd": "d:\\MinGW\\bin"
             },
             "problemMatcher": [
                 "$gcc"
