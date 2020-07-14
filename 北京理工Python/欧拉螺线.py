@@ -6,14 +6,14 @@ def koch(size, angle,n,s):
     
 
 def main():
-    turtle.setup(600,600)
+    turtle.setup(1000,800)
     turtle.penup()
-    turtle.goto(-200, 100)
-    s=200
-    angle=15
-    size=30
+    turtle.goto(0, 0)
+    s=3000
+    angle=31
+    size=10
     turtle.pendown()
-    turtle.speed(100)
+    turtle.speed(30000)
     # turtle.hideturtle()
     turtle.pensize(1)
     for i in range(s) :
