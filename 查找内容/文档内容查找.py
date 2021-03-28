@@ -1,3 +1,7 @@
+
+#查找故障记录内容
+
+
 f = open("C:\\Users\\D\\Documents\\Python\\查找内容\\0704.txt",encoding='utf-8')
 ls = f.readlines()
 # s = set(ls)
