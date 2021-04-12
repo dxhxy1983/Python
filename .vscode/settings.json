@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python36_64\\python.exe",
+    "python.pythonPath": "D:\\Program Files\\Python38\\python.exe",
     "files.associations": {
         "ELE_1.C": "cpp"
     }
