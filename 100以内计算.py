@@ -8,7 +8,6 @@
 import random
 from datetime import datetime
 
-
 def add_test(sum_value, count):
     '''
     返回指定个数（count）的计算题，以计算某数(sum_value）以内的加法

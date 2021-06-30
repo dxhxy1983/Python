@@ -8,4 +8,5 @@ for item in ls:
     lt = item.split(",")
     lt = lt[::-1]
     print(";".join(lt))
+    
 f.close()
