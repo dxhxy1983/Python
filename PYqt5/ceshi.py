@@ -1,0 +1,3 @@
+import ce
+
+ce.main()
