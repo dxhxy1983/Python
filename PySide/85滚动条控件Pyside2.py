@@ -31,7 +31,7 @@ class ScrollBar(QWidget):
 
         self.scrollbar1=QScrollBar() 
         self.scrollbar1.setMaximum(255)
-        self.scrollbar1.sliderMoved.connect(self.sliderMoved)
+        self.scrollbar1.valueChanged.connect(self.sliderMoved)
         # self.scrollbar1.SliderMove.connect(self.sliderMoved)
         # self.scrollbar1.sconnect(self.sliderMoved)
         # self.scrollbar1.SliderValueChange.connect(self.sliderMoved)
@@ -40,15 +40,16 @@ class ScrollBar(QWidget):
 
         self.scrollbar2=QScrollBar()
         self.scrollbar2.setMaximum(255)
-        self.scrollbar2.sliderMoved.connect(self.sliderMoved)
+        # self.scrollbar2.sliderMoved.connect(self.sliderMoved)
+        self.scrollbar2.valueChanged.connect(self.sliderMoved)
 
         self.scrollbar3=QScrollBar()
         self.scrollbar3.setMaximum(255)
-        self.scrollbar3.sliderMoved.connect(self.sliderMoved)
+        self.scrollbar3.valueChanged.connect(self.sliderMoved)
 
         self.scrollbar4=QScrollBar()
         self.scrollbar4.setMaximum(255)
-        self.scrollbar4.sliderMoved.connect(self.sliderMoved1)
+        self.scrollbar4.valueChanged.connect(self.sliderMoved1)
 
         hbox.addWidget(self.scrollbar1)
         hbox.addWidget(self.scrollbar2)
