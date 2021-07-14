@@ -10,14 +10,13 @@
 import sys
 
 
-# from PySide2.QtWidgets import QHBoxLayout
-# from PySide2 import QtWidgets
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+
+# from PySide2.QtCore import *
+# from PySide2.QtGui import *
+# from PySide2.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 class ScrollBar(QWidget):
 
@@ -32,7 +31,7 @@ class ScrollBar(QWidget):
 
         self.scrollbar1=QScrollBar() 
         self.scrollbar1.setMaximum(255)
-        self.scrollbar1.SliderMove.connect(self.sliderMoved)
+        self.scrollbar1.sliderMoved.connect(self.sliderMoved)
         # self.scrollbar1.SliderMove.connect(self.sliderMoved)
         # self.scrollbar1.sconnect(self.sliderMoved)
         # self.scrollbar1.SliderValueChange.connect(self.sliderMoved)
@@ -41,11 +40,11 @@ class ScrollBar(QWidget):
 
         self.scrollbar2=QScrollBar()
         self.scrollbar2.setMaximum(255)
-        self.scrollbar2.SliderMove.connect(self.sliderMoved)
+        self.scrollbar2.sliderMoved.connect(self.sliderMoved)
 
         self.scrollbar3=QScrollBar()
         self.scrollbar3.setMaximum(255)
-        self.scrollbar3.SliderMove.connect(self.sliderMoved)
+        self.scrollbar3.sliderMoved.connect(self.sliderMoved)
 
         hbox.addWidget(self.scrollbar1)
         hbox.addWidget(self.scrollbar2)
@@ -60,7 +59,7 @@ class ScrollBar(QWidget):
         print(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar1.value())
         palette=QPalette()
         c=QColor(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar1.value(),255)
-        palette.setColor(QPalette.foreground.c)
+        palette.setColor(QPalette.Foreground,c)
         self.lable.setPalette(palette)
         
 
