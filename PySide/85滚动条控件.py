@@ -46,22 +46,31 @@ class ScrollBar(QWidget):
         self.scrollbar3.setMaximum(255)
         self.scrollbar3.sliderMoved.connect(self.sliderMoved)
 
+        self.scrollbar4=QScrollBar()
+        self.scrollbar4.setMaximum(255)
+        self.scrollbar4.sliderMoved.connect(self.sliderMoved1)
+
         hbox.addWidget(self.scrollbar1)
         hbox.addWidget(self.scrollbar2)
         hbox.addWidget(self.scrollbar3)
+        hbox.addWidget(self.scrollbar4)
 
         self.setGeometry(300,300,300,200)
 
+
         self.setLayout(hbox)
+        self.y=self.lable.pos().y()
     
     
     def sliderMoved(self):
-        print(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar1.value())
+        print(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar3.value())
         palette=QPalette()
-        c=QColor(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar1.value(),255)
+        c=QColor(self.scrollbar1.value(),self.scrollbar2.value(),self.scrollbar3.value(),255)
         palette.setColor(QPalette.Foreground,c)
         self.lable.setPalette(palette)
-        
+    
+    def sliderMoved1(self):
+        self.lable.move(self.lable.x(),self.y+self.scrollbar4.value())    
 
 if __name__=='__main__':
     app=QApplication(sys.argv)
