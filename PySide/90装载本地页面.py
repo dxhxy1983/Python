@@ -12,7 +12,7 @@ class WebEngineView(QMainWindow):
         self.setWindowTitle("装载本地Web页面")
         self.setGeometry(5,30,1355,730)
               
-        url= os.getcwd()+"/test.html"
+        url= os.getcwd()+"\PySide\测试.html"
          
         self.browser=QWebEngineView()
         self.browser.load(QUrl.fromLocalFile(url))
