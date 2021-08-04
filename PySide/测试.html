@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            测试页面
+        </title>
+        <script>
+            function fulln(value){
+                alert('<'+value+'>')
+                var firstname =document.getElementById('firstname').value
+                var lastname =document.getElementById('lastname').value
+                var fullname =firstname+ ' '+ lastname
+                document.getElementById('submit-btn').style.display='block'
+    
+                document.getElementById('fullname').value=fullname
+    
+                // document.getElementById('fullname').value=fullname
+                
+                return fullname
+            }
+    
+        </script>
+      
+    </head>
+    <body>
+        <form>
+            <label>First Name:</label>
+            <input type="text" name="firstname" id="firstname"></input>
+            <br/>
+            <label>Last Name</label>
+            <input type="text" name="lastname" id="lastname"></input>
+            <br/>
+            <label>Full Name</label>
+            <input type="text" name="fullname" id="lastname"></input>
+            <br/>
+            <input style="display: none;" type="submit" id="submit-btn"></input>
+        </form>
+      
+    </body>
+    
+</html>
