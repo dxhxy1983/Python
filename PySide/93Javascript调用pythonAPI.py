@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets  import *
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import *
-from MySharedObject  import MySharedObject
+# from PyQt5.QtWidgets  import *
+# from PyQt5.QtWebEngineWidgets import QWebEngineView
+# from PyQt5.QtCore import *
+# from MySharedObject  import MySharedObject
 from PyQt5.QtWebChannel import  QWebChannel
-import sys
-import os
+# import sys
+# import os
 
 '''
 
