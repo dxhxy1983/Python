@@ -2,13 +2,16 @@
 
 # from SQL.manualPlan import dsp_data
 # from SQL.manualPlan import datestmp
+
 import os
 import time
+from tkinter import Event
+from PySide2.QtCore import *
 # import PyQt5.sip
-from PySide2.QtWidgets import QApplication,QMainWindow
+from PySide2.QtWidgets import QApplication,QMainWindow 
 import sys
 sys.path.append('C:\\Users\\D\\Documents\\Python\\PYqt5')
-from mugong import Ui_ClickandComfort
+from mugong import Ui_ClickandComfort #导入UI界面程序
 import pymysql
 from datetime import date, datetime
 import random
@@ -23,6 +26,8 @@ parametersList=[IPhost,username,wcsinfo,auto_info,manul_info]
 # abs_path=os.path.dirname(os.path.abspath(__file__))
 # print(abs_path)
 # file_path=abs_path+'\\settings.txt'
+
+#读取参数配置文件
 file_path='d:\\mugongData\\settings.txt'
 with open(file_path,'r') as f:
     i=0
@@ -38,7 +43,13 @@ username=parametersList[1]
 wcsinfo=parametersList[2]
 auto_info=parametersList[3]
 manul_info=str(parametersList[4])
+# class myobject(QObject):
+#     def timerEvent(self, par):   #重写对象的定时器函数
+#         MainWindow.refresh(self)
 
+#         print(evt,'1')
+
+        
 class MainWindow(QMainWindow):
 
     # 连接数据库
@@ -120,7 +131,7 @@ class MainWindow(QMainWindow):
         return result
     kuwei=[]
     num=0
-    
+    #定义库位选择按钮功能
     def btn1_clicked(self):
         result=self.slect_data(1)        
         self.ui.TextLable2.setText(str(self.print_data(result)))
@@ -181,6 +192,7 @@ class MainWindow(QMainWindow):
         self.ui.TextLable2.setText(str(self.print_data(result))) 
         self.num=12
         self.kuwei=list(result[0])
+    #定义确认按钮功能    
     def btnconfirm_clicked(self):
         datestmp=self.datestmp()
              
@@ -193,13 +205,15 @@ class MainWindow(QMainWindow):
             
         else:
             value=(result[0],2,result[1],1,result[3],result[4],0,str(datestmp))
-        self.insert_data(manul_info,value)  
+        
         self.ui.pushButton_confirm.setEnabled(False)
-        
-        
-        self.ui.lab_manul.setText(self.dsp_data(manul_info,"时间戳"))
+        self.insert_data(manul_info,value)  
+        self.refresh()
+        # self.ui.lab_manul.setText(self.dsp_data(manul_info,"时间戳"))
         self.ui.pushButton_confirm.setEnabled(True)
         # self.close()
+
+    
 
     def btn14_clicked(self):
         # print("14btn")
@@ -229,9 +243,25 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_12.clicked.connect(self.btn12_clicked)
         # self.ui.pushButton_refresh.clicked.connect(self.btn14_clicked)
         self.ui.TextLable1.setText(str(self.btn14_clicked()))
+        # self.ui.lab_auto.setText(self.dsp_data(auto_info,'物料名称'))
+        # self.ui.lab_manul.setText(self.dsp_data(manul_info,"时间戳"))
+        self.ui.pushButton_confirm.clicked.connect(self.btnconfirm_clicked)
+        # self.ui.pushButton_addAutoTask.clicked.connect(self.refresh)
+
+        # self.obj=myobject(self)
+        # self.id=self.obj.startTimer(1000)
+        
+    def refresh(self):
+
+        
+        
         self.ui.lab_auto.setText(self.dsp_data(auto_info,'物料名称'))
         self.ui.lab_manul.setText(self.dsp_data(manul_info,"时间戳"))
-        self.ui.pushButton_confirm.clicked.connect(self.btnconfirm_clicked)
+        # print("1")
+        # self.timer.start(1000) 
+
+       
+    
         
 
     
@@ -244,6 +274,8 @@ if __name__=="__main__":
 
     app = QApplication([])
     mainw = MainWindow()
+    mainw.refresh()
+
     mainw.show()
     app.exec_()
 
