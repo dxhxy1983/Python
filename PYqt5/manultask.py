@@ -3,6 +3,7 @@
 # from SQL.manualPlan import dsp_data
 # from SQL.manualPlan import datestmp
 import os
+import time
 # import PyQt5.sip
 from PySide2.QtWidgets import QApplication,QMainWindow
 import sys
@@ -193,7 +194,12 @@ class MainWindow(QMainWindow):
         else:
             value=(result[0],2,result[1],1,result[3],result[4],0,str(datestmp))
         self.insert_data(manul_info,value)  
-        self.close()
+        self.ui.pushButton_confirm.setEnabled(False)
+        
+        
+        self.ui.lab_manul.setText(self.dsp_data(manul_info,"时间戳"))
+        self.ui.pushButton_confirm.setEnabled(True)
+        # self.close()
 
     def btn14_clicked(self):
         # print("14btn")
@@ -234,12 +240,12 @@ class MainWindow(QMainWindow):
 
      
     
-   
+if __name__=="__main__":  
 
-app = QApplication([])
-mainw = MainWindow()
-mainw.show()
-app.exec_()
+    app = QApplication([])
+    mainw = MainWindow()
+    mainw.show()
+    app.exec_()
 
 
 
