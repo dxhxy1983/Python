@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ľ����Ceibyr.ui'
+## Form generated from reading UI file 'ľ����LzIQzh.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -141,22 +141,19 @@ class Ui_ClickandComfort(object):
         self.TextLable1.setObjectName(u"TextLable1")
         self.TextLable1.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.splitter_2.addWidget(self.TextLable1)
-        # self.pushButton_delAll = QPushButton(ClickandComfort)
-        # self.pushButton_delAll.setObjectName(u"pushButton_delAll")
-        # self.pushButton_delAll.setGeometry(QRect(520, 450, 101, 51))
-        # self.pushButton_addAutoTask = QPushButton(ClickandComfort)
-        # self.pushButton_addAutoTask.setObjectName(u"pushButton_addAutoTask")
-        # self.pushButton_addAutoTask.setGeometry(QRect(630, 450, 101, 51))
-        # self.pushButton_delAllAutoTask = QPushButton(ClickandComfort)
-        # self.pushButton_delAllAutoTask.setObjectName(u"pushButton_delAllAutoTask")
-        # self.pushButton_delAllAutoTask.setGeometry(QRect(740, 450, 101, 51))
+        self.pushButton_delAll = QPushButton(ClickandComfort)
+        self.pushButton_delAll.setObjectName(u"pushButton_delAll")
+        self.pushButton_delAll.setGeometry(QRect(520, 450, 101, 51))
+        self.pushButton_addAutoTask = QPushButton(ClickandComfort)
+        self.pushButton_addAutoTask.setObjectName(u"pushButton_addAutoTask")
+        self.pushButton_addAutoTask.setGeometry(QRect(630, 450, 101, 51))
+        self.pushButton_delAllAutoTask = QPushButton(ClickandComfort)
+        self.pushButton_delAllAutoTask.setObjectName(u"pushButton_delAllAutoTask")
+        self.pushButton_delAllAutoTask.setGeometry(QRect(740, 450, 101, 51))
 
         self.retranslateUi(ClickandComfort)
 
         QMetaObject.connectSlotsByName(ClickandComfort)
-
-        self.timer=QTimer(ClickandComfort)
-        
     # setupUi
 
     def retranslateUi(self, ClickandComfort):
@@ -184,8 +181,8 @@ class Ui_ClickandComfort(object):
         self.lab_auto.setText(QCoreApplication.translate("ClickandComfort", u"\u81ea\u52a8\u4efb\u52a1\u5217\u8868", None))
         self.label_3.setText(QCoreApplication.translate("ClickandComfort", u"\u5e93\u4f4d\u53f7  \u7269\u6599\u540d\u79f0        \u6570\u91cf    \u539a\u5ea6    \u7269\u6599\u72b6\u6001", None))
         self.TextLable1.setText(QCoreApplication.translate("ClickandComfort", u"\u5e93\u4f4d\u4fe1\u606f\u9884\u89c8", None))
-        # self.pushButton_delAll.setText(QCoreApplication.translate("ClickandComfort", u"\u6e05\u7a7a\u624b\u52a8\u4efb\u52a1", None))
-        # self.pushButton_addAutoTask.setText(QCoreApplication.translate("ClickandComfort", u"\u5bfc\u5165\u81ea\u52a8\u4efb\u52a1", None))
-        # self.pushButton_delAllAutoTask.setText(QCoreApplication.translate("ClickandComfort", u"\u6e05\u7a7a\u81ea\u52a8\u4efb\u52a1", None))
+        self.pushButton_delAll.setText(QCoreApplication.translate("ClickandComfort", u"\u6e05\u7a7a\u624b\u52a8\u4efb\u52a1", None))
+        self.pushButton_addAutoTask.setText(QCoreApplication.translate("ClickandComfort", u"\u5bfc\u5165\u81ea\u52a8\u4efb\u52a1", None))
+        self.pushButton_delAllAutoTask.setText(QCoreApplication.translate("ClickandComfort", u"\u6e05\u7a7a\u81ea\u52a8\u4efb\u52a1", None))
     # retranslateUi
 
