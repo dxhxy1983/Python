@@ -4,7 +4,7 @@ import xlwt
 from datetime import date, datetime
 
 
-title =datetime.now().strftime("%Y%m%d") + '加工记录.xls'
+title =datetime.now().strftime("%Y%m%d") + '加工记录.xlsx'
 year=datetime.now().strftime("%Y")
 month =datetime.now().strftime("%m")
 month=format(int(month)) 
