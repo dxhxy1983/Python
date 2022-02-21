@@ -28,8 +28,12 @@ if __name__=="__main__":
    '发生金额','资金余额','当前持仓']]
    d=b[['交收日期','清算日期','业务类型','证券代码','证券名称','成交价格','成交数量','成交金额',
    '发生金额','剩余金额','证券数量']]
-#    d=b[['成交日期','委托日期']]
+   d.columns=['成交日期','委托日期','业务类型','证券代码','证券名称','成交价格','成交数量','成交金额',
+   '发生金额','资金余额','当前持仓']
    e=[c,d]
    
-   df=pd.DataFrame(e)
+   df=pd.concat(e,axis=0,ignore_index = False, join = 'outer')
+   
+   df.sort_values(by='成交日期',axis=0,inplace=True,)
+   # print(df)
    df.to_excel('result.xlsx', index=False)
