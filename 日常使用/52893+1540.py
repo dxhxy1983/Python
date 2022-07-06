@@ -2,11 +2,11 @@
 from this import d
 import pandas as pd
 
-def open_excel(path):
+def open_excel(path,sheetname,datatype):
     try:
         # book = xlrd.open_workbook("C:\\Users\\D\\Desktop\\木工库\\物料名.xlsx")  #文件名，把文件与py文件放在同一目录下
         # book = xlrd.open_workbook(r'D:\mugongData\南侧雕刻机计划表.xlsx')
-        book = pd.read_excel(path,sheet_name="汇总",dtype={'证券代码':str})
+        book = pd.read_excel(path,sheet_name="汇总",dtype={datatype:str})
         return book
     except:
         print("open excel file failed!")
@@ -18,8 +18,8 @@ def open_excel(path):
 if __name__=="__main__":  
 
 #    a=open_excel(r'C:\Users\DXHQXX\Documents\GitHub\Python\日常使用\1.xls')
-   a = open_excel(r'日常使用\52893交割汇总.xlsx')
-   b = open_excel(r'日常使用\1540交割汇总.xlsx')
+   a = open_excel(r'日常使用\52893交割汇总.xlsx',"汇总",'证券代码')
+   b = open_excel(r'日常使用\1540交割汇总.xlsx',"汇总",'证券代码')
 #    rows0=a.col_values(0)
 #    rows1=a.col_values(1)
 #    rows=rows0+rows1
