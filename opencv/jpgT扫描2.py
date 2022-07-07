@@ -1,4 +1,5 @@
 import cv2
+from matplotlib.cbook import pts_to_midstep
 import numpy as np
 
 
@@ -18,9 +19,13 @@ def rectify(h):
  
     return hnew 
 #读入要检测的图片，此处读入单张图片。如果分辨率足够好的话，我们也可以使用笔记本电脑的摄像头。
-image = cv2.imread(r'C:\Users\D\Documents\python\Python\opencv\123.png')
+image = cv2.imread(r'C:\Users\D\Documents\python\Python\opencv\2.jpg')
 #重新设置图片的大小，以便对其进行处理:选择最佳维度，以便重要内容不会丢失
-image = cv2.resize(image, (1500,880))
+# image = cv2.resize(image, (1500,880))
+height, width, channel = image.shape
+adj_width=int(width/2)
+adj_height=int(height/2)
+image = cv2.resize(image, (int(width/2), int(height/2)))
 #创建原始图像的副本
 orig = image.copy()
 #对图像进行灰度处理，并进而进行行高斯模糊处理
@@ -45,14 +50,16 @@ for c in contours:
         break               #找到即跳出循环
  
 #将目标映射到800*800四边形
-approx = rectify(target)
-pts2 = np.float32([[0,0],[800,0],[800,800],[0,800]])
+# approx = rectify(target)
+approx = np.float32([[0,0],[adj_width,0],[adj_width, adj_height],[0, adj_height]])
+pts2=approx
+# pts2 = np.float32([[0,0],[800,0],[800,800],[0,800]])
  
 #透视变换
 # 使用gtePerspectiveTransform函数获得透视变换矩阵：approx是源图像中四边形的4个定点集合位置；pts2是目标图像的4个定点集合位置
 M = cv2.getPerspectiveTransform(approx, pts2)
 # 使用warpPerspective函数对源图像进行透视变换，输出图像dst大小为800*800
-dst = cv2.warpPerspective(orig, M, (800,800))
+dst = cv2.warpPerspective(orig, M, (adj_width,adj_height))
 #画出轮廓，-1表示所有的轮廓，画笔颜色为（0,255,0），粗细为2
 cv2.drawContours(image, [target], -1, (0, 255, 0), 2)
 #对透视变换后的图像进行灰度处理
@@ -74,16 +81,16 @@ th3 = cv2.adaptiveThreshold(dst, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BIN
 th4 = cv2.adaptiveThreshold(dst,255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
  
 #输出处理后的图像
-cv2.imshow("原始图像", orig)
-cv2.imshow("原始图像经灰度变换", gray)
-cv2.imshow("原始图像经高斯模糊处理", blurred)
-cv2.imshow("原始图像经canny边缘检测后的结果", orig_edged)
-cv2.imshow("边界被标记的原图", image)
-cv2.imshow("固定阈值操作", th1)
-cv2.imshow("Otsu二值化", th2)
-cv2.imshow("自适应阈值（领域内均值）", th3)
-cv2.imshow("自适应阈值（领域内像素点加权和）", th4)
-cv2.imshow("透视变换后的图像", dst)
+cv2.imshow("orig 原始图像", orig)
+cv2.imshow("gray 原始图像经灰度变换", gray)
+cv2.imshow("blurred 原始图像经高斯模糊处理", blurred)
+cv2.imshow("orig_edged 原始图像经canny边缘检测后的结果", orig_edged)
+cv2.imshow("image singed 边界被标记的原图", image)
+cv2.imshow("th1 固定阈值操作", th1)
+cv2.imshow("th2 Otsu二值化", th2)
+cv2.imshow("th3 自适应阈值（领域内均值）", th3)
+cv2.imshow("th4 自适应阈值（领域内像素点加权和）", th4)
+cv2.imshow("dst 透视变换后的图像", dst)
  
 cv2.waitKey(0)
 cv2.destroyAllWindows()
