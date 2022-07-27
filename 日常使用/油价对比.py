@@ -5,6 +5,7 @@ litterA=coastM/priceA
 litterB=coastM/priceB
 litterCoastA=coastA/litterA
 litterCoastB=coastB/litterB
+
 compereAB=(priceA*coastA)/(priceB*coastB)
 print("{:.2f}".format(compereAB))
 print("A油站加油{0:.2f}升,实际单价{1:.2f}".format(litterA,litterCoastA))
