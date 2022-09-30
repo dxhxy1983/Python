@@ -1,4 +1,7 @@
-uint16  i,j,crc16,temp;
+int i,j;
+int crc16;
+int temp;
+
 crc16=0xFFFF;
 for ( i = 0; i < sizeOfDim(buf,0); i++)
 {
@@ -7,11 +10,7 @@ for ( i = 0; i < sizeOfDim(buf,0); i++)
     {
         temp=crc16&&0x0001;
         crc16>>=0x01;
-        if (temp)
-        {
-            crc16^=0xA001;
-        }
-        
-    }
-    
+        if (temp) crc16^=0xA001;
+             
+    }   
 }

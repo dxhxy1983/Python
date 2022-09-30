@@ -2,5 +2,14 @@
     "python.pythonPath": "D:\\Program Files\\Python38\\python.exe",
     "files.associations": {
         "ELE_1.C": "cpp"
-    }
+    },
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*_test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }
