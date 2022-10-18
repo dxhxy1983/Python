@@ -19,7 +19,7 @@ if __name__=="__main__":
 
 #    a=open_excel(r'C:\Users\DXHQXX\Documents\GitHub\Python\日常使用\1.xls')
    a = open_excel(r'日常使用\1.xls')
-   b = open_excel(r'日常使用\2.xls')
+   b = open_excel(r'日常使用\2.xls')# 港股通交割明细
 #    rows0=a.col_values(0)
 #    rows1=a.col_values(1)
 #    rows=rows0+rows1
