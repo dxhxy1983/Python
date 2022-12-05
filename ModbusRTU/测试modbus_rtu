@@ -5,9 +5,10 @@ import serial
 import modbus_tk
 import modbus_tk.defines as cst
 from modbus_tk import modbus_rtu
+import time
 
 
-def mod(PORT="com2"):
+def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
     red = []
     alarm = ""
     try:
@@ -17,8 +18,8 @@ def mod(PORT="com2"):
         master.set_timeout(0.5)
         master.set_verbose(True)
 
-        # 读保持寄存器                 功能码                起始地址      寄存器数量
-        red = master.execute(1, cst.READ_HOLDING_REGISTERS, 2,            4)  # 这里可以修改需要读取的功能码
+        # 读保持寄存器                 功能码    起始地址      寄存器数量  设定值
+        red = master.execute(address, FucNum, start_add,         num,  outputvalue)  # 这里可以修改需要读取的功能码
         print(red)
         # red = master.execute(2, cst.READ_COILS, 0, 2)
         # print(red)
@@ -34,5 +35,6 @@ def mod(PORT="com2"):
 
 if __name__ == "__main__":
     while 1:
-        mod()
-        
+        mod("com2",1,6,1,1,outputvalue=12)
+        time.sleep(1)
+        mod("com2",1,3,2,5)
