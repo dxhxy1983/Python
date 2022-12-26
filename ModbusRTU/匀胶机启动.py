@@ -36,8 +36,8 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
 
 
 if __name__ == "__main__":
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    file_path=current_directory+"\\settings.txt"
+    current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+    file_path=current_path+"\\settings.txt"
     parametersList=[]
     
     with open(file_path,'r',encoding="utf-8") as f:

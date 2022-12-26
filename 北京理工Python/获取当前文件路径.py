@@ -1,5 +1,5 @@
 import os, sys
-current_directory = os.path.dirname(os.path.abspath(__file__))
+current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 print(current_directory)
 

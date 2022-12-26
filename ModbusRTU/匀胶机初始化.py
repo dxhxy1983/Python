@@ -36,8 +36,8 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
 
 
 if __name__ == "__main__":
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    file_path=current_directory+"\\settings.txt"
+    current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+    file_path=current_path+"\\settings.txt"
     parametersList=[]
     
     with open(file_path,'r',encoding="utf-8") as f:
@@ -47,10 +47,10 @@ if __name__ == "__main__":
             # print(line)
             kye,value=line.split(":")
             parametersList.append(value)
-    print(parametersList)        
+    # print(parametersList)        
     num=0
     Port=parametersList[0]
-    print(Port)
+    # print(Port)
     comAdd1=1 #匀胶协议板地址
     #设置工作模式为单步
     readStatus,alarm=mod(Port,comAdd1,FucNum=6,
@@ -63,19 +63,19 @@ if __name__ == "__main__":
                     start_add=1,num=1, 
                     outputvalue=255   
                     )
-    print("真空泵状态:{0}",readDing)
+    # print("真空泵状态:{0}",readDing)
     #启动打开定位销
     readpump,alarm=mod(Port,comAdd2,FucNum=5,
                     start_add=0,num=1,
                     outputvalue=255)
-    print("定位销状态:{0}",readpump)
+    # print("定位销状态:{0}",readpump)
     #当定位销打开后启动电机                
     if readDing[1]==0xFF00:
         readRun,alarm=mod(Port,comAdd1,FucNum=6,
                     start_add=257,num=1, #工作模式
                     outputvalue=255   #0x00：停车，0xFF：启动
                     )
-    print(readRun)
+    # print(readRun)
     #启动完成,监控停止
 
     while readRun[1]==255:
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         readSpeed,alarm=mod(Port,comAdd1,3,     #01 05：运行状态：0：停止，1：运行中，2：处于停车过程中（只读）40262
                              261,              #01 06：当前转速（只读）40263
                              3)                #01 07：剩余时长（只读）40264
-        print(readSpeed)                                     
+        # print(readSpeed)                                     
         if 10<readSpeed[1]<120:
             #复位定位销
             readDing,alarm=mod(Port,comAdd2,FucNum=5,
