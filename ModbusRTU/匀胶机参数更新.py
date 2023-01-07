@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # print(Port)
     comAdd1=1 #匀胶协议板地址
     #设置参数
-    for i in range (0,15):
+    for i in range (0,12):
         address=4352+i
         parameterValue=parametersList[i+1]
         readParameter,alarm=mod(Port,comAdd1,FucNum=6,
