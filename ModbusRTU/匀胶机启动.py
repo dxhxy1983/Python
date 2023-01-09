@@ -45,8 +45,9 @@ if __name__ == "__main__":
         for line in f:
             line=line.strip('\n')
             # print(line)
-            kye,value=line.split(":")
-            parametersList.append(value)
+            if line!="":
+                key,value=line.split(":")
+                parametersList.append(value)
     # print(parametersList)        
     num=0
     Port=parametersList[0]

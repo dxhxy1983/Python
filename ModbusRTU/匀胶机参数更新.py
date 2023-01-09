@@ -22,9 +22,7 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
 
         # 读保持寄存器                 功能码    起始地址      寄存器数量  设定值
         red = master.execute(address, FucNum, start_add,         num,  outputvalue)  # 这里可以修改需要读取的功能码
-        # print(red)
-        # red = master.execute(2, cst.READ_COILS, 0, 2)
-        # print(red)
+
         alarm = "正常"
         return list(red), alarm
 
@@ -37,23 +35,25 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
 
 if __name__ == "__main__":
     current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
-    # current_directory = os.path.dirname(os.path.abspath(__file__))
     file_path=current_path+"\\settings.txt"
     parametersList=[]
     
     with open(file_path,'r',encoding="utf-8") as f:
         i=0
         for line in f:
+            
             line=line.strip('\n')
             # print(line)
-            kye,value=line.split(":")
-            parametersList.append(value)
-    # print(parametersList)        
+            if line!="":
+                key,value=line.split(":")
+                parametersList.append(value)
+      
     num=0
     Port=parametersList[0]
-    # print(Port)
+  
     comAdd1=1 #匀胶协议板地址
     #设置参数
+    #设置第一组
     for i in range (0,12):
         address=4352+i
         parameterValue=parametersList[i+1]
@@ -61,12 +61,43 @@ if __name__ == "__main__":
                     start_add=address,num=1, #工作模式
                     outputvalue=int(parameterValue)
                     )
-
+    #设置第二组
+    for i in range(0,12):
+        address=4608+i
+        parameterValue=parametersList[i+1+12]
+        readParameter,alarm=mod(Port,comAdd1,FucNum=6,
+                    start_add=address,num=1, #工作模式
+                    outputvalue=int(parameterValue)
+                    )
+    #设置第三组
+    for i in range(0,12):
+        address=4864+i
+        parameterValue=parametersList[i+1+24]
+        readParameter,alarm=mod(Port,comAdd1,FucNum=6,
+                    start_add=address,num=1, #工作模式
+                    outputvalue=int(parameterValue)
+                    ) 
+    #设置第四组
+    for i in range(0,12):
+        address=5120+i
+        parameterValue=parametersList[i+1+36]
+        readParameter,alarm=mod(Port,comAdd1,FucNum=6,
+                    start_add=address,num=1, #工作模式
+                    outputvalue=int(parameterValue)
+                    ) 
+    #设置第五组
+    for i in range(0,12):
+        address=5376+i
+        parameterValue=parametersList[i+1+48]
+        readParameter,alarm=mod(Port,comAdd1,FucNum=6,
+                    start_add=address,num=1, #工作模式
+                    outputvalue=int(parameterValue)
+                    )                                 
     num=1
         
         
     print(num)        
-    # sys.exit(num)
+   
         
 
 
