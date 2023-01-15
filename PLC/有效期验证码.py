@@ -15,14 +15,18 @@ c=0
 # #             for mod4 in a:
 
 
-mod=3445
-for i in range(10000,99999):
+mod1=6308
+shang=9
+for i in range(0,10000):
         for j in list:
-            b=(i*int(j)*9973)//10000
-            if b==mod:
+            b=i*int(j)+9973
+            d=shang*10000+mod1
+            if b==d:
                 # print(mod,i,j)
-                if mod not in a:
-                    a.append(mod)
+                if j not in a:
+                    a.append(j)
+                    print(i,j)
+                   
                 # else:
                 #     print("有重复")
                     
