@@ -45,25 +45,49 @@ if __name__=="__main__":
 
     #获得要找的文件路径
     listFilePath=[]
-    listFailed=[]
+    listSuccess=[]
     #获得查到的文件路径
-    for file in fileName:
+  
+    for j in range(len(fileName)):
         for i in range(len(sourceList)):
-            if file in sourceList[i]:
+            if fileName[j] in sourceList[i]:
                 listFilePath.append(sourceList[i])
-                fileName.remove(file)
+                listSuccess.append(fileName[j])
 
+
+    setFileName=set(fileName)
+    setSuccess=set(listSuccess)
+    listFailed=setFileName^setSuccess
     # print(listFilePath)
-    dstpath=current_path+"\\日常使用"
+    dstpath=current_path+ r"\\"
     #复制文件到指定目录
     for fPath in listFilePath:
         fpath,fname=os.path.split(fPath)
-        shutil.copy(fPath, dstpath + fname)
+        # print(dstpath+fname)
+        shutil.copy(fPath, dstpath +fname)
+
     file_path=current_path+"\\查找失败的文件.txt"
     with open(file_path,'a',encoding="utf-8") as f:
-        for i in fileName:
+        for i in listFailed:
             f.write(i)
+            f.write("\n")
     f.close()
+
+
+    # file_path=current_path+"\\目标文件列表.txt"
+    # with open(file_path,'a',encoding="utf-8") as f:
+    #     for i in sourceList:
+    #         f.write(i)
+    #         f.write("\n")
+    # f.close()  
+
+    # file_path=current_path+"\\待查列表.txt"
+    # with open(file_path,'a',encoding="utf-8") as f:
+    #     for i in fileName:
+    #         f.write(i)
+    #         f.write("\n")
+    # f.close()  
+    
 
 
 
