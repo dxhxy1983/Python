@@ -45,7 +45,12 @@ if __name__=="__main__":
     fileName=[]
     for index, row in df.iterrows():
         # print(row[1]+"-"+row[0])
-        fileName.append(str(row[1])+"-"+str(row[0]))
+        if (str(row[0])=="nan"):            
+            fileName.append(str(row[1]))
+        else:
+            fileName.append(str(row[1])+"-"+str(row[0]))
+
+
 
     #获得要找的文件路径
     listFilePath=[]
@@ -55,7 +60,9 @@ if __name__=="__main__":
     for j in range(len(fileName)):
         for i in range(len(sourceList)):
             for k in range(len(sourceList[i])):
-                if fileName[j] in sourceList[i][k]:
+                fpath,fname=os.path.split(sourceList[i][k])
+                name=fname.split(".")[0]
+                if fileName[j] == name:
                     listFilePath.append(sourceList[i][k])
                     listSuccess.append(fileName[j])
 
@@ -64,7 +71,11 @@ if __name__=="__main__":
     setSuccess=set(listSuccess)
     listFailed=setFileName^setSuccess
     # print(listFilePath)
-    dstpath=current_path+ r"\\"
+    dstpath=current_path+ "\\"+"查到的文件"+"\\"
+    if os.path.exists(dstpath):
+        a=0
+    else:
+        os.mkdir(dstpath)
     #复制文件到指定目录
     for fPath in listFilePath:
         fpath,fname=os.path.split(fPath)
@@ -79,20 +90,6 @@ if __name__=="__main__":
     f.close()
 
 
-    # file_path=current_path+"\\目标文件列表.txt"
-    # with open(file_path,'a',encoding="utf-8") as f:
-    #     for i in sourceList:
-    #         f.write(i)
-    #         f.write("\n")
-    # f.close()  
-
-    # file_path=current_path+"\\待查列表.txt"
-    # with open(file_path,'a',encoding="utf-8") as f:
-    #     for i in fileName:
-    #         f.write(i)
-    #         f.write("\n")
-    # f.close()  
-    
 
 
 
