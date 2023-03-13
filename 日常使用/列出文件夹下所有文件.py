@@ -24,6 +24,7 @@ if __name__=="__main__":
     file_path=current_path+"\\settings.txt"
     # print(current_path)
     parametersList=[]
+    sourceList=[]
     
     with open(file_path,'r',encoding="utf-8") as f:
         line=f.readlines()
@@ -32,7 +33,10 @@ if __name__=="__main__":
             parametersList.append(line[i])
 
     #获得查找源目录
-    sourceList=DFS_file_search(parametersList[0])
+    
+    for i in range(len(parametersList)):
+        listA=DFS_file_search(parametersList[i])
+        sourceList.append(listA)
     #获得要查找的文件名
     IO=current_path+"\\文件查找.xlsx"
     readedExcel=pd.read_excel(io=IO)
@@ -50,9 +54,10 @@ if __name__=="__main__":
   
     for j in range(len(fileName)):
         for i in range(len(sourceList)):
-            if fileName[j] in sourceList[i]:
-                listFilePath.append(sourceList[i])
-                listSuccess.append(fileName[j])
+            for k in range(len(sourceList[i])):
+                if fileName[j] in sourceList[i][k]:
+                    listFilePath.append(sourceList[i][k])
+                    listSuccess.append(fileName[j])
 
 
     setFileName=set(fileName)
