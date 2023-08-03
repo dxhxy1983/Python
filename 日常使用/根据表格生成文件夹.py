@@ -1,6 +1,7 @@
 import os,sys
 import pandas as pd
 import shutil
+import re
 def open_excel(path):
     try:    
         book = pd.read_excel(path)
@@ -25,5 +26,16 @@ if __name__=="__main__":
         strName=dataFrame.loc[i,index1]+dataFrame.loc[i,index2]
         sourceList.append(strName)
     
-    
+    for i in range(len(sourceList)):
+        os.path.exists(current_path)
+        sourceList_a=re.findall(r'[^\*"/:?\\|<>]',sourceList[i],re.S) 
+        sourceList_b="".join(sourceList_a)
+        isExists = os.path.exists(current_path+"\\"+sourceList_b)
+        if not isExists:
+        # 创建文件夹 路径+名称
+            os.makedirs(current_path+"\\"+sourceList_b)
+            print("%s 目录创建成功"+sourceList_b)
+        else:
+            print("%s 目录创建失败"+sourceList_b)
+            continue
    
