@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['F:\\myDoc\\github\\Python\\ModbusRTU\\Pictures\\logo1.ico'],
+    icon=['F:\\myDoc\\github\\Python\\ModbusRTU\\Pictures\\logo.ico'],
 )

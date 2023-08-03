@@ -22,9 +22,7 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
 
         # 读保持寄存器                 功能码    起始地址      寄存器数量  设定值
         red = master.execute(address, FucNum, start_add,         num,  outputvalue)  # 这里可以修改需要读取的功能码
-        # print(red)
-        # red = master.execute(2, cst.READ_COILS, 0, 2)
-        # print(red)
+
         alarm = "正常"
         return list(red), alarm
 
@@ -45,8 +43,9 @@ if __name__ == "__main__":
         for line in f:
             line=line.strip('\n')
             # print(line)
-            kye,value=line.split(":")
-            parametersList.append(value)
+            if line!="":
+                key,value=line.split(":")
+                parametersList.append(value)
     print(parametersList)        
     num=0
     Port=parametersList[0]
@@ -112,7 +111,6 @@ if __name__ == "__main__":
             break
         
     print(num)        
-    # sys.exit(num)
-        
+ 
 
 

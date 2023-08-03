@@ -57,54 +57,54 @@ if __name__ == "__main__":
                     outputvalue=1   #1：单步，2：多步，3：报错，0：系统参数
                     )
     #打开真空泵
-    comAdd2=3 #IO板地址
-    readDing,alarm=mod(Port,comAdd2,FucNum=5,
-                    start_add=1,num=1, 
-                    outputvalue=255   
-                    )
+    # comAdd2=3 #IO板地址
+    # readDing,alarm=mod(Port,comAdd2,FucNum=5,
+    #                 start_add=1,num=1, 
+    #                 outputvalue=255   
+    #                 )
     # print("真空泵状态:{0}",readDing)
     #启动打开定位销
-    readpump,alarm=mod(Port,comAdd2,FucNum=5,
-                    start_add=0,num=1,
-                    outputvalue=255)
+    # readpump,alarm=mod(Port,comAdd2,FucNum=5,
+    #                 start_add=0,num=1,
+    #                 outputvalue=255)
     # print("定位销状态:{0}",readpump)
     #当定位销打开后启动电机                
-    if readDing[1]==0xFF00:
-        readRun,alarm=mod(Port,comAdd1,FucNum=6,
+    # if readDing[1]==0xFF00:
+    readRun,alarm=mod(Port,comAdd1,FucNum=6,
                     start_add=257,num=1, #工作模式
                     outputvalue=255   #0x00：停车，0xFF：启动
                     )
     # print(readRun)
     #启动完成,监控停止
 
-    while readRun[1]==255:
+    # while readRun[1]==255:
         
-        # mod("com2",1,6,1,1,outputvalue=255)
+    #     # mod("com2",1,6,1,1,outputvalue=255)
         
 
 
-        time.sleep(0.2)
-        readSpeed,alarm=mod(Port,comAdd1,3,     #01 05：运行状态：0：停止，1：运行中，2：处于停车过程中（只读）40262
-                             261,              #01 06：当前转速（只读）40263
-                             3)                #01 07：剩余时长（只读）40264
-        # print(readSpeed)                                     
-        if 10<readSpeed[1]<120:
-            #复位定位销
-            readDing,alarm=mod(Port,comAdd2,FucNum=5,
-                    start_add=0,num=1, 
-                    outputvalue=0   
-                    )
-            #停止真空泵
-            readpump,alarm=mod(Port,comAdd2,FucNum=5,
-                    start_add=1,num=1,
-                    outputvalue=0)
-            time.sleep(2)
-            #停止电机
-            readStop,alarm=mod(Port,comAdd1,FucNum=6,
-                    start_add=257,num=1,
-                    outputvalue=0)
-            num=1
-            break
+    #     time.sleep(0.2)
+    #     readSpeed,alarm=mod(Port,comAdd1,3,     #01 05：运行状态：0：停止，1：运行中，2：处于停车过程中（只读）40262
+    #                          261,              #01 06：当前转速（只读）40263
+    #                          3)                #01 07：剩余时长（只读）40264
+    #     # print(readSpeed)                                     
+    #     if 10<readSpeed[1]<120:
+    #         #复位定位销
+    #         readDing,alarm=mod(Port,comAdd2,FucNum=5,
+    #                 start_add=0,num=1, 
+    #                 outputvalue=0   
+    #                 )
+    #         #停止真空泵
+    #         readpump,alarm=mod(Port,comAdd2,FucNum=5,
+    #                 start_add=1,num=1,
+    #                 outputvalue=0)
+    #         time.sleep(2)
+    #         #停止电机
+    #         readStop,alarm=mod(Port,comAdd1,FucNum=6,
+    #                 start_add=257,num=1,
+    #                 outputvalue=0)
+    num=1
+    #         break
         
     print(num)        
     # sys.exit(num)
