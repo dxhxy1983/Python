@@ -36,10 +36,10 @@ if __name__=="__main__":
     a=b.drop(0)
     dataFrame=a.iloc[:,[2,4]]
     dataFrame.columns=[index1,index2]
-    print(dataFrame)
+    # print(dataFrame)
     # strName=dataFrame.loc[0,index1]
     for i in range(dataFrame.iloc[:,0].size):
-        strName=dataFrame.loc[i,index1]+dataFrame.loc[i,index2]
+        strName=dataFrame.loc[i+1,index1]+dataFrame.loc[i+1,index2]
         sourceList.append(strName)
     
     for i in range(len(sourceList)):
