@@ -30,10 +30,13 @@ if __name__=="__main__":
         file_path=file_list[0]
     parametersList=[]
     sourceList=[]
-    a=open_excel(file_path)
+    b=open_excel(file_path)
     index1="合同号"
     index2="产品名称"
-    dataFrame=a[[index1,index2]]
+    a=b.drop(0)
+    dataFrame=a.iloc[:,[2,4]]
+    dataFrame.columns=[index1,index2]
+    print(dataFrame)
     # strName=dataFrame.loc[0,index1]
     for i in range(dataFrame.iloc[:,0].size):
         strName=dataFrame.loc[i,index1]+dataFrame.loc[i,index2]
