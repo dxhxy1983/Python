@@ -21,7 +21,7 @@ if __name__=="__main__":
     #获取当前文件目录
     current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-    file_path=current_path+"\\1.xlsx"
+    
     extension=".xlsx"
     file_list = find_files(current_path, extension)
     # print(file_list)
