@@ -9,12 +9,25 @@ def open_excel(path):
     except:
         print("open excel file failed!")
 
+def find_files(folder, extension):
+    file_list = []
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            if file.endswith(extension):
+                file_list.append(os.path.join(root, file))
+    return file_list
 
 if __name__=="__main__":
     #获取当前文件目录
     current_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+
     file_path=current_path+"\\1.xlsx"
+    extension=".xlsx"
+    file_list = find_files(current_path, extension)
+    # print(file_list)
     # print(current_path)
+    if file_list!=None:
+        file_path=file_list[0]
     parametersList=[]
     sourceList=[]
     a=open_excel(file_path)
