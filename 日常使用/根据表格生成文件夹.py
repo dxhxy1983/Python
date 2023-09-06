@@ -31,15 +31,22 @@ if __name__=="__main__":
     parametersList=[]
     sourceList=[]
     b=open_excel(file_path)
+    # b.set_axis(b.iloc[0], axis=1, inplace=True)
+    columns_name= b.columns.tolist()
+    # print(columns_name)
+
+    # b.drop(0, inplace=True)
+    # print(b)
     index1="合同号"
     index2="产品名称"
-    a=b.drop(0)
-    dataFrame=a.iloc[:,[2,4]]
-    dataFrame.columns=[index1,index2]
+    # a=b.drop(0)
+    dataFrame=b[[index1,index2]]
+    print(dataFrame)
+    # dataFrame.columns=[index1,index2]
     # print(dataFrame)
     # strName=dataFrame.loc[0,index1]
     for i in range(dataFrame.iloc[:,0].size):
-        strName=dataFrame.loc[i+1,index1]+dataFrame.loc[i+1,index2]
+        strName=str(i+1)+"-"+dataFrame.loc[i+1,index1]+dataFrame.loc[i+1,index2]
         sourceList.append(strName)
     
     for i in range(len(sourceList)):
