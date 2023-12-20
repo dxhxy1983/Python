@@ -1,4 +1,4 @@
-# -*- coding: utf_8 -*-
+# -*- coding: utf-8 -*-
 
 
 import serial
@@ -29,7 +29,7 @@ def mod(PORT,address,FucNum,start_add,num,outputvalue=0):
         return list(red), alarm
 
     except Exception as exc:
-        print(str(exc))
+        # print(str(exc))
         alarm = (str(exc))
 
     return red, alarm  ##如果异常就返回[],故障信息
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     file_path=current_path+"\\settings.txt"
     parametersList=[]
     
-    with open(file_path,'r',encoding="utf-8") as f:
+    with open(file_path,'r',encoding="utf-8",errors='ignore') as f:
         i=0
         for line in f:
             line=line.strip('\n')
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                 key,value=line.split(":")
                 parametersList.append(value)
     # print(parametersList)        
-    num=0
+    num=10
     Port=parametersList[0]
     # print(Port)
     comAdd1=1 #匀胶协议板地址
@@ -71,27 +71,38 @@ if __name__ == "__main__":
     #                 outputvalue=255)
     # print("定位销状态:{0}",readpump)
     #当定位销打开后启动电机                
-    
-    readRun,alarm=mod(Port,comAdd1,FucNum=6,
-                    start_add=257,num=1, #工作模式
-                    outputvalue=255   #0x00：停车，0xFF：启动
+    flag_run=0
+    try: 
+        readRun,alarm=mod(Port,comAdd1,FucNum=6,
+                    start_add=257,num=1, #启停
+                    outputvalue=0xFF   #0x00：停车，0xFF：启动
                     )
+    except Exception as exc:
+        num=10
+        # exit()
     # print(readRun)
     #启动完成,监控停止
 
     # while readRun[1]==255:
         
     #     # mod("com2",1,6,1,1,outputvalue=255)
-        
-
-
-    #     time.sleep(0.5)                         #
-    #     readSpeed,alarm=mod(Port,comAdd1,3,     #01 05：运行状态：0：停止，1：运行中，2：处于停车过程中（只读）40262
-    #                          258,              #01 06：当前转速（只读）40263
-    #                          6)                #01 07：剩余时长（只读）40264
-    #     # print(readSpeed)                                     
-    #     if readSpeed[2]==5 and 10<readSpeed[4]<120:
-    #         #复位定位销
+    while alarm=="正常":        
+        time.sleep(0.5)                         #
+        readSpeed,alarm=mod(Port,comAdd1,FucNum=3,  #01 05：运行状态：0：停止，1：运行中，2：处于停车过程中（只读）40262
+                            start_add=261,              #01 06：当前转速（只读）40263
+                            num=5)                #01 07：剩余时长（只读）40264
+        # print(readSpeed[0])
+        if alarm=="正常":
+            if readSpeed[0]==1:
+                flag_run=1
+            if flag_run==1 and (readSpeed[4]==2 or readSpeed[4]==4):
+                num=readSpeed[4]
+                flag_run=0
+                break
+        else:
+            num=10
+            break
+    #         #复位定位销   
     #         readDing,alarm=mod(Port,comAdd2,FucNum=5,
     #                 start_add=0,num=1, 
     #                 outputvalue=0   
@@ -104,12 +115,9 @@ if __name__ == "__main__":
     #         #停止电机
     #         readStop,alarm=mod(Port,comAdd1,FucNum=6,
     #                 start_add=257,num=1,
-    #                 outputvalue=0)
-    num=1
-    #         break
-        
-    print(num)        
-    # sys.exit(num)
+    #                 outputvalue=0)  
+    print(num)  
+    sys.exit(num)
         
 
 
