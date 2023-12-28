@@ -1,32 +1,33 @@
 @echo off
 cls
 color 0A
- 
+set NAME1="æœ¬åœ°è¿æ¥"
+set NAME2="æ— çº¿ç½‘ç»œè¿æ¥"
 @echo off
 echo.
-echo. ===ĞŞ¸ÄipµØÖ·===
+echo. ===ä¿®æ”¹ipåœ°å€===
 echo.
-echo. 1:ÓĞÏß×Ô¶¯»ñÈ¡
+echo. 1:æœ‰çº¿è‡ªåŠ¨è·å–
 echo.
-echo. 2:ÖØÉèÓĞÏßipµØÖ·Îª192.168.0.201
+echo. 2:é‡è®¾æœ‰çº¿ipåœ°å€ä¸º192.168.0.201
 echo. 
-echo. 21:ÖØÉèÓĞÏßIPµØÖ·Îª192168.0.251 ×ÓÍøÑÚÂë255.255.254.0
+echo. 21:é‡è®¾æœ‰çº¿IPåœ°å€ä¸º192.168.0.251 å­ç½‘æ©ç 255.255.254.0
 echo.
-echo. 3:ÖØÉèÓĞÏßipµØÖ·Îª10.28.213.10
+echo. 3:é‡è®¾æœ‰çº¿ipåœ°å€ä¸º10.28.213.10
 echo.
-echo. 4:ÖØÉèÓĞÏßipµØÖ·Îª192.168.1.201
+echo. 4:é‡è®¾æœ‰çº¿ipåœ°å€ä¸º192.168.1.201
 echo.
-echo. 5:ÎŞÏß×Ô¶¯»ñÈ¡
+echo. 5:æ— çº¿è‡ªåŠ¨è·å–
 echo.
-echo. 6:ÖØÉèÎŞÏßipÎª192.168.0.252
+echo. 6:é‡è®¾æ— çº¿ipä¸º192.168.0.252
 echo.
-echo. 61:ÖØÉèÎŞÏßipÎª192.168.0.252 ×ÓÍøÑÚÂë255.255.254.0
+echo. 61:é‡è®¾æ— çº¿ipä¸º192.168.0.252 å­ç½‘æ©ç 255.255.254.0
 echo.
-echo. 7:ÖØÉèÎŞÏßipÎª10.28.213.11
+echo. 7:é‡è®¾æ— çº¿ipä¸º10.28.213.11
 echo. 
-echo  8:ÖØÉèÎŞÏßipÎª192.168.1.210
+echo  8:é‡è®¾æ— çº¿ipä¸º192.168.1.210
 echo.
-set/p sel=ÇëÑ¡ÔñĞŞ¸Ä·½Ê½£º
+set/p sel=è¯·é€‰æ‹©ä¿®æ”¹æ–¹å¼ï¼š
 if "%sel%"=="1" goto auto1
 if "%sel%"=="2" goto jt1
 if "%sel%"=="21" goto jt11
@@ -38,107 +39,107 @@ if "%sel%"=="61" goto jt41
 if "%sel%"=="7" goto jt5
 if "%sel%"=="8" goto jt6
 
-echo ÄúÃ»ÓĞÑ¡ÔñĞŞ¸Ä·½Ê½¡£
+echo æ‚¨æ²¡æœ‰é€‰æ‹©ä¿®æ”¹æ–¹å¼ã€‚
 goto end
  
 :auto1
-netsh interface ip set address name="±¾µØÁ¬½Ó" source=dhcp
-netsh interface ip delete dns "±¾µØÁ¬½Ó" all
+netsh interface ip set address name=%NAME1% source=dhcp
+netsh interface ip delete dns %NAME1% all
 ipconfig /flushdns
 //ipconfig /all
 goto end
 
 :auto2
-netsh interface ip set address name="ÎŞÏßÍøÂçÁ¬½Ó" source=dhcp
-netsh interface ip delete dns "ÎŞÏßÍøÂçÁ¬½Ó" all
+netsh interface ip set address name=%NAME2% source=dhcp
+netsh interface ip delete dns %NAME2% all
 ipconfig /flushdns
 //ipconfig /all
 goto end
  
  
 :jt1
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="±¾µØÁ¬½Ó" source=static addr=192.168.0.201 mask=255.255.255.0 gateway=192.168.0.1 gwmetric=1
-netsh interface ip set dns name="±¾µØÁ¬½Ó" source=static addr=192.168.0.1
-netsh interface ip add dns name="±¾µØÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME1% source=static addr=192.168.0.201 mask=255.255.255.0 gateway=192.168.0.1 gwmetric=1
+netsh interface ip set dns name=%NAME1% source=static addr=192.168.0.1
+netsh interface ip add dns name=%NAME1% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
  
 :jt11
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="±¾µØÁ¬½Ó" source=static addr=192.168.0.251 mask=255.255.254.0 gateway=192.168.0.1 gwmetric=1
-netsh interface ip set dns name="±¾µØÁ¬½Ó" source=static addr=192.168.0.1
-netsh interface ip add dns name="±¾µØÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME1% source=static addr=192.168.0.251 mask=255.255.254.0 gateway=192.168.0.1 gwmetric=1
+netsh interface ip set dns name=%NAME1% source=static addr=192.168.0.1
+netsh interface ip add dns name=%NAME1% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 :jt2
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="±¾µØÁ¬½Ó" source=static addr=10.28.213.10 mask=255.255.255.0 gateway=10.28.213.254 gwmetric=1
-netsh interface ip set dns name="±¾µØÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="±¾µØÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME1% source=static addr=10.28.213.10 mask=255.255.255.0 gateway=10.28.213.254 gwmetric=1
+netsh interface ip set dns name=%NAME1% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME1% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 
 
 :jt3
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="±¾µØÁ¬½Ó" source=static addr=192.168.1.201 mask=255.255.255.0 gateway=192.168.1.1 gwmetric=1
-netsh interface ip set dns name="±¾µØÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="±¾µØÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME1% source=static addr=192.168.1.201 mask=255.255.255.0 gateway=192.168.1.1 gwmetric=1
+netsh interface ip set dns name=%NAME1% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME1% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 
 :jt4
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=192.168.0.252 mask=255.255.255.0 gateway=192.168.0.1 gwmetric=1
-netsh interface ip set dns name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="ÎŞÏßÍøÂçÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME2% source=static addr=192.168.0.252 mask=255.255.255.0 gateway=192.168.0.1 gwmetric=1
+netsh interface ip set dns name=%NAME2% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME2% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 :jt41
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=192.168.0.252 mask=255.255.254.0 gateway=192.168.0.1 gwmetric=1
-netsh interface ip set dns name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="ÎŞÏßÍøÂçÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME2% source=static addr=192.168.0.252 mask=255.255.254.0 gateway=192.168.0.1 gwmetric=1
+netsh interface ip set dns name=%NAME2% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME2% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 :jt5
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=10.28.213.11 mask=255.255.255.0 gateway=10.28.213.254 gwmetric=1
-netsh interface ip set dns name="±¾µØÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="±¾µØÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME2% source=static addr=10.28.213.11 mask=255.255.255.0 gateway=10.28.213.254 gwmetric=1
+netsh interface ip set dns name=%NAME1% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME1% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 
 :jt6
-echo ÕıÔÚ¸ü¸ÄIPµØÖ·£¬ÇëÉÔµÈ......
-netsh interface ip set address name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=192.168.1.210 mask=255.255.255.0 gateway=192.168.1.1 gwmetric=1
-netsh interface ip set dns name="ÎŞÏßÍøÂçÁ¬½Ó" source=static addr=10.8.0.107
-netsh interface ip add dns name="ÎŞÏßÍøÂçÁ¬½Ó" addr=8.8.8.8 index=2 
+echo æ­£åœ¨æ›´æ”¹IPåœ°å€ï¼Œè¯·ç¨ç­‰......
+netsh interface ip set address name=%NAME2% source=static addr=192.168.1.210 mask=255.255.255.0 gateway=192.168.1.1 gwmetric=1
+netsh interface ip set dns name=%NAME2% source=static addr=10.8.0.107
+netsh interface ip add dns name=%NAME2% addr=8.8.8.8 index=2 
 ipconfig /flushdns
 //ipconfig /all
-echo ¸ü¸ÄIPµØÖ·Íê³É£¡
+echo æ›´æ”¹IPåœ°å€å®Œæˆï¼
 goto end
 
 :end
