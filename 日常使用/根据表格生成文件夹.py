@@ -46,7 +46,7 @@ if __name__=="__main__":
     # print(dataFrame)
     # strName=dataFrame.loc[0,index1]
     for i in range(dataFrame.iloc[:,0].size):
-        strName=str(i+1)+"-"+dataFrame.loc[i,index1]+dataFrame.loc[i,index2]
+        strName=str(i+1)+"-"+str(dataFrame.loc[i,index1])+str(dataFrame.loc[i,index2])
         sourceList.append(strName)
     
     for i in range(len(sourceList)):
