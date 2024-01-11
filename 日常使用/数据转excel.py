@@ -1,8 +1,3 @@
-import openpyxl
-
-workbook=openpyxl.Workbook()
-sheet=workbook.active
-
 a='''期数 时间 租金 本金 利息 本金余额
 1 202401 0 0 0 2,500,000
 2 202402 118,000 89,415 28,585 2,410,585
@@ -41,6 +36,10 @@ a='''期数 时间 租金 本金 利息 本金余额
 35 202611 44,000 42,536 1,464 85,538
 36 202612 44,000 43,022 978 42,516
 37 202701 43,000 42,516 484 0'''
+
+import openpyxl
+workbook=openpyxl.Workbook()
+sheet=workbook.active
 c=a.replace("\n", " ")
 b=c.split(" ")
 num_column=6
