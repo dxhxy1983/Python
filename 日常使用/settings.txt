@@ -1,2 +1,7 @@
 F:\电极
 E:\电极2
+测试1=!BufferCreate(1,4,ENDIAN_BIG,TEXT_UTF8)
+测试2=!BufferClear(1)
+测试3=!BufferSetInt(1,0,真空压力高字节,BUF_DT_WUB)
+测试4=!BufferSetInt(1,2,真空压力低字节,BUF_DT_WUB)
+测试5=!BufferGetFloat(1,0,floatValueRef,BUF_DT_DF)
