@@ -1,6 +1,6 @@
 import os
 import fitz  # PyMuPDF
-
+import sys
 def get_text_from_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read().strip()
@@ -27,7 +27,7 @@ def add_text_to_pdf(input_pdf, output_pdf, text):
 
 if __name__ == "__main__":
     # 获取当前目录
-    current_directory = os.path.dirname(os.path.abspath(__file__))
+    current_directory =os.path.dirname(os.path.realpath(sys.argv[0]))
     output_folder = os.path.join(current_directory, "output")
 
     # 确保输出文件夹存在
