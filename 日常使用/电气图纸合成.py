@@ -1,14 +1,18 @@
 import os
 import fitz  # PyMuPDF
 import sys
+
 def get_text_from_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read().strip()
+
 def get_filename_from_path(filepath):
     return os.path.basename(filepath)
-def add_text_to_pdf(input_pdf, output_pdf, text):
+
+def add_text_to_pdf(input_pdf, output_pdf, text, font_path):
     # 打开现有的PDF
-    pdf_document = fitz.open(input_pdf)     
+    pdf_document = fitz.open(input_pdf)
+    
     # 遍历每一页
     for page_number in range(len(pdf_document)):
         # 选择要添加文本的页面
@@ -16,18 +20,20 @@ def add_text_to_pdf(input_pdf, output_pdf, text):
         # 定义文本位置
         x, y = 653, 809
 
-    # 插入文本
-        page.insert_text((x, y), text, fontsize=12, color=(0, 0, 0))
-    filename=get_filename_from_path(input_pdf)
-    if filename=="封面.pdf":
-         page.insert_text((330, 330), text, fontsize=18, color=(0, 0, 0))
+        # 插入文本
+        page.insert_font(fontname="simsun", fontfile=font_path)
+        page.insert_text((x, y), text, fontsize=12, fontname="simsun", color=(0, 0, 0))
+        
+        filename = get_filename_from_path(input_pdf)
+        if filename == "封面.pdf":
+            page.insert_text((330, 330), text, fontsize=18, fontname="simsun", color=(0, 0, 0))
 
     # 保存更改后的PDF
     pdf_document.save(output_pdf)
 
 if __name__ == "__main__":
     # 获取当前目录
-    current_directory =os.path.dirname(os.path.realpath(sys.argv[0]))
+    current_directory = os.path.dirname(os.path.realpath(sys.argv[0]))
     output_folder = os.path.join(current_directory, "output")
 
     # 确保输出文件夹存在
@@ -36,13 +42,20 @@ if __name__ == "__main__":
 
     # 从型号.txt 文件读取要添加的文本
     text_to_add = get_text_from_file(os.path.join(current_directory, "型号.txt"))
+    
+    # 指定支持中文的字体路径
+    font_path = os.path.join(current_directory, "SimSun.ttf")
+    if not os.path.exists(font_path):
+        print(f"Font file not found: {font_path}")
+        sys.exit(1)
 
     # 遍历当前文件夹下的所有 PDF 文件
     for filename in os.listdir(current_directory):
         if filename.endswith(".pdf"):
             input_pdf_path = os.path.join(current_directory, filename)
             output_pdf_path = os.path.join(output_folder, filename)
-            add_text_to_pdf(input_pdf_path, output_pdf_path, text_to_add)
+            add_text_to_pdf(input_pdf_path, output_pdf_path, text_to_add, font_path)
+    
     print("Text added to all PDF files successfully.")
 
 
