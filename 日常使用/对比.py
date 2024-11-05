@@ -16,16 +16,16 @@ void RebuildParameter_lcd(struct RUNparameter DP[6][6],u16 g,u32 addr1,u32 addr2
 	char temp8[250];
 	u16 temp16[200],a;
 	memcpy(temp8,DP,g);   //
-	a=CalcCrc(temp8,g);       //è®¡ç®—æ ¡éªŒå€¼
+	a=CalcCrc(temp8,g);       //¼ÆËãĞ£ÑéÖµ
 	temp8[g]=a&0xFF;
 	temp8[g+1]=a>>8;
 	memcpy(temp16,temp8,g+2);   //
-	//ä»æ–°å†™å…¥flash
-	FLASH_Unlock();						//è§£é”
-	FLASH_ErasePage(addr1);   //æ“¦é™¤é¡µï¼ŒèŒƒå›´åŒ…å«addr2
+	//´ÓĞÂĞ´Èëflash
+	FLASH_Unlock();						//½âËø
+	FLASH_ErasePage(addr1);   //²Á³ıÒ³£¬·¶Î§°üº¬addr2
 	STMFLASH_Write_NoCheck(addr1,temp16,g/2+1);
 	STMFLASH_Write_NoCheck(addr2,temp16,g/2+1);
-	FLASH_Lock();//ä¸Šé”
+	FLASH_Lock();//ÉÏËø
 }
 
 void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
@@ -33,14 +33,14 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 	char temp8[60];
 	u16 temp16[30];
 	memcpy(temp8,&DP,(sizeof(DP)-2));   //
-	DP.Crc16=CalcCrc(temp8,(sizeof(DP)-2));    //è®¡ç®—æ ¡éªŒå€¼
+	DP.Crc16=CalcCrc(temp8,(sizeof(DP)-2));    //¼ÆËãĞ£ÑéÖµ
 	memcpy(temp16,&DP,sizeof(DP));   //
-	//ä»æ–°å†™å…¥flash
-	FLASH_Unlock();						//è§£é”
-	FLASH_ErasePage(addr1);   //æ“¦é™¤é¡µï¼ŒèŒƒå›´åŒ…å«addr2
+	//´ÓĞÂĞ´Èëflash
+	FLASH_Unlock();						//½âËø
+	FLASH_ErasePage(addr1);   //²Á³ıÒ³£¬·¶Î§°üº¬addr2
 	STMFLASH_Write_NoCheck(addr1,temp16,sizeof(DP)/2);
 	STMFLASH_Write_NoCheck(addr2,temp16,sizeof(DP)/2);
-	FLASH_Lock();//ä¸Šé”
+	FLASH_Lock();//ÉÏËø
 }
 
 
@@ -53,28 +53,28 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 	u16  t,test;      
 	u32 usartbound1=BOUND1;
 	u32 usartbound2=BOUND2;
-//	char speed_n=0;     //å½“å‰é€Ÿåº¦ç´¯è®¡è®¡æ•°
-//	u16  speed_s=0;     //å½“å‰é€Ÿåº¦ç´¯è®¡å€¼
+//	char speed_n=0;     //µ±Ç°ËÙ¶ÈÀÛ¼Æ¼ÆÊı
+//	u16  speed_s=0;     //µ±Ç°ËÙ¶ÈÀÛ¼ÆÖµ
 	char erro_count=0;  //
-	u16  startwork=0;  //å¯åœæŒ‡ä»¤
-	char S_formula=1;  //æ˜¾ç¤ºé…æ–¹ç¼–å·
-	u16  erroNO;       //é”™è¯¯ç¼–å·
+	u16  startwork=0;  //ÆôÍ£Ö¸Áî
+	char S_formula=1;  //ÏÔÊ¾Åä·½±àºÅ
+	u16  erroNO;       //´íÎó±àºÅ
 	 
-	delay_init();	    	 //å»¶æ—¶å‡½æ•°åˆå§‹åŒ–	
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //è®¾ç½®NVICä¸­æ–­åˆ†ç»„2:2ä½æŠ¢å ä¼˜å…ˆçº§ï¼Œ2ä½å“åº”ä¼˜å…ˆçº§
+	delay_init();	    	 //ÑÓÊ±º¯Êı³õÊ¼»¯	
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //ÉèÖÃNVICÖĞ¶Ï·Ö×é2:2Î»ÇÀÕ¼ÓÅÏÈ¼¶£¬2Î»ÏìÓ¦ÓÅÏÈ¼¶
 
-// 	LED_Init();			     //LEDç«¯å£åˆå§‹åŒ–
-//	KEY_Init();          //åˆå§‹åŒ–ä¸æŒ‰é”®è¿æ¥çš„ç¡¬ä»¶æ¥å£
+// 	LED_Init();			     //LED¶Ë¿Ú³õÊ¼»¯
+//	KEY_Init();          //³õÊ¼»¯Óë°´¼üÁ¬½ÓµÄÓ²¼ş½Ó¿Ú
 	time_conf();
-	DIR1_Init();           //PA.8 è¾“å‡ºä½ï¼Œä»¤usart1-485å¤„äºæ¥æ”¶çŠ¶æ€
-	DIR2_Init();           //PA.1 è¾“å‡ºä½ï¼Œä»¤usart2-485å¤„äºæ¥æ”¶çŠ¶æ€
+	DIR1_Init();           //PA.8 Êä³öµÍ£¬Áîusart1-485´¦ÓÚ½ÓÊÕ×´Ì¬
+	DIR2_Init();           //PA.1 Êä³öµÍ£¬Áîusart2-485´¦ÓÚ½ÓÊÕ×´Ì¬
 	
 	
-//è¯»é…ç½®å‚æ•°
+//¶ÁÅäÖÃ²ÎÊı
 	DeviceParameter=*(struct DEVICEPARAMETER*)ParameterAddr3;
 	memcpy(BPbuf,&DeviceParameter,(sizeof(DeviceParameter)-2));   //
-//æ ¡éªŒ
-  t=CalcCrc(BPbuf,(sizeof(DeviceParameter)-2));    //è®¡ç®—æ ¡éªŒå€¼
+//Ğ£Ñé
+  t=CalcCrc(BPbuf,(sizeof(DeviceParameter)-2));    //¼ÆËãĞ£ÑéÖµ
 	if(t==DeviceParameter.Crc16)
 	{
 		DeviceAddress=DeviceParameter.Addr;
@@ -84,15 +84,15 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 	{
 		DeviceParameter=*(struct DEVICEPARAMETER*)ParameterAddr4;
 	  memcpy(BPbuf,&DeviceParameter,(sizeof(DeviceParameter)-2));   //
-//æ ¡éªŒ
-   t=CalcCrc(BPbuf,(sizeof(DeviceParameter)-2));    //è®¡ç®—æ ¡éªŒå€¼
+//Ğ£Ñé
+   t=CalcCrc(BPbuf,(sizeof(DeviceParameter)-2));    //¼ÆËãĞ£ÑéÖµ
 	 if(t==DeviceParameter.Crc16)
 	  {
 		  DeviceAddress=DeviceParameter.Addr;
 		  usartbound1=DeviceParameter.Bound1;
 			usartbound2=DeviceParameter.Bound2;
 //			if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-      RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash
+      RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash
 	  }else
 		     {
 		       usartbound1=BOUND1;
@@ -107,32 +107,32 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
    }	
 	
 	 
-//åˆå§‹åŒ–ç³»ç»Ÿé»˜è®¤å‚æ•°
-   runparameter[0][1].acc=1000;  //å‡é€Ÿåº¦
-	 runparameter[0][1].speed=1;  //è¯­è¨€    1.ä¸­æ–‡   2.è‹±æ–‡
-	 runparameter[0][1].time=2;   //èœ‚é¸£å™¨  1.å¼€     2.å…³
+//³õÊ¼»¯ÏµÍ³Ä¬ÈÏ²ÎÊı
+   runparameter[0][1].acc=1000;  //¼õËÙ¶È
+	 runparameter[0][1].speed=1;  //ÓïÑÔ    1.ÖĞÎÄ   2.Ó¢ÎÄ
+	 runparameter[0][1].time=2;   //·äÃùÆ÷  1.¿ª     2.¹Ø
 
-//è¯»é…ç½®å‚æ•°
+//¶ÁÅäÖÃ²ÎÊı
 	memcpy(BPbuf,(char*)ParameterAddr1,(buflong+2));   //
-//æ ¡éªŒ
-  t=CalcCrc(BPbuf,buflong);    //è®¡ç®—æ ¡éªŒå€¼
+//Ğ£Ñé
+  t=CalcCrc(BPbuf,buflong);    //¼ÆËãĞ£ÑéÖµ
 	if(t==BPbuf[buflong+1]*256+BPbuf[buflong])
 	{
 		memcpy(runparameter,BPbuf,buflong); 
 	}else
 	{
 	 memcpy(BPbuf,(char*)ParameterAddr2,(buflong+2));  //
-//æ ¡éªŒ
-   t=CalcCrc(BPbuf,buflong);    //è®¡ç®—æ ¡éªŒå€¼
+//Ğ£Ñé
+   t=CalcCrc(BPbuf,buflong);    //¼ÆËãĞ£ÑéÖµ
 	 if(t==BPbuf[buflong+1]*256+BPbuf[buflong])
 	  {
 			memcpy(runparameter,BPbuf,buflong); 
-      RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+      RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 	  }
    }
 
 	 
-	 //åˆå§‹åŒ–å›ºå®šå‚æ•°
+	 //³õÊ¼»¯¹Ì¶¨²ÎÊı
 	runparameter[0][0].speed=120;
 	runparameter[0][0].time=20;
 	runparameter[0][0].acc=1000;
@@ -145,7 +145,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 	 }
 	 
 	delay_ms(2);
-	uart_init(usartbound1);	 //ä¸²å£åˆå§‹åŒ–
+	uart_init(usartbound1);	 //´®¿Ú³õÊ¼»¯
 	uart2_init(usartbound2);
 
 //	LCD_Init();
@@ -153,13 +153,13 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 
 //------------------------------- 
 	 
-//è®¾ç½®åˆå§‹çŠ¶æ€  å•æ­¥	 
-	 play_flag=0;      //è¿è¡Œä¸­æ ‡å¿—ï¼Œ0:æœªè¿è¡Œï¼Œ1ï¼šè¿è¡Œä¸­ï¼Œ2åœè½¦ä¸­
-	 set_flag=false;   //éè®¾ç½®
-	 modeNo=1;         ////0ï¼šç³»ç»Ÿå‚æ•° 1ï¼šå•æ­¥  2ï¼šå¤šæ­¥ 3.æŠ¥é”™
-	 formula=0,step=0; //é…æ–¹ç¼–å·0ï¼Œæ­¥éª¤ç¼–å·0
+//ÉèÖÃ³õÊ¼×´Ì¬  µ¥²½	 
+	 play_flag=0;      //ÔËĞĞÖĞ±êÖ¾£¬0:Î´ÔËĞĞ£¬1£ºÔËĞĞÖĞ£¬2Í£³µÖĞ
+	 set_flag=false;   //·ÇÉèÖÃ
+	 modeNo=1;         ////0£ºÏµÍ³²ÎÊı 1£ºµ¥²½  2£º¶à²½ 3.±¨´í
+	 formula=0,step=0; //Åä·½±àºÅ0£¬²½Öè±àºÅ0
 	 
-	 readmotorflag=true;          //å¼€å§‹é€šä¿¡
+	 readmotorflag=true;          //¿ªÊ¼Í¨ĞÅ
 	 readmotortime=READMOTORTIME;
 	 
 	 
@@ -172,32 +172,32 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 
 //		if(flish_time==0)
 //		{
-//			flish_time=FLISHTIME; //é—ªçƒæ—¶é—´é—´éš”
-//			shadow=(shadow+1)&0x01;//æ±‚å
+//			flish_time=FLISHTIME; //ÉÁË¸Ê±¼ä¼ä¸ô
+//			shadow=(shadow+1)&0x01;//Çó·´
 //			Showsetsite(setsite,shadow);
 //		}
 		
 		if(readmotortime==0)
 		{
-			if(modeNo!=3)                   //0ï¼šç³»ç»Ÿå‚æ•° 1ï¼šå•æ­¥  2ï¼šå¤šæ­¥ 3.æŠ¥é”™
+			if(modeNo!=3)                   //0£ºÏµÍ³²ÎÊı 1£ºµ¥²½  2£º¶à²½ 3.±¨´í
 			{
-				readmotorflag=false;          //æš‚åœå‘¨æœŸè¯»motoræ“ä½œ
+				readmotorflag=false;          //ÔİÍ£ÖÜÆÚ¶Ámotor²Ù×÷
 				readmotortime=READMOTORTIME;
 				
-				//è¿è¡Œæ—¶é—´=0
-				if(PVtime==0&&play_flag==1)   //play_flagè¿è¡Œä¸­æ ‡å¿—ï¼Œ0:æœªè¿è¡Œï¼Œ1ï¼šè¿è¡Œä¸­ï¼Œ2åœè½¦ä¸­
+				//ÔËĞĞÊ±¼ä=0
+				if(PVtime==0&&play_flag==1)   //play_flagÔËĞĞÖĞ±êÖ¾£¬0:Î´ÔËĞĞ£¬1£ºÔËĞĞÖĞ£¬2Í£³µÖĞ
 				{
 					if(modeNo==1)
 					{
-						stopmotor();  //åœè½¦  ç”µæœºä¸²å£
-						//if(runstep1==6) process=3;  //åˆ¤æ–­æœªé”å®š
+						stopmotor();  //Í£³µ  µç»ú´®¿Ú
+						//if(runstep1==6) process=3;  //ÅĞ¶ÏÎ´Ëø¶¨
 					}
 					else if(modeNo==2)
 					{
 						if(step==5)
 						{
-							stopmotor();  //åœè½¦  ç”µæœºä¸²å£
-							//if(runstep2==8) process=3;  //åˆ¤æ–­æœªé”å®š
+							stopmotor();  //Í£³µ  µç»ú´®¿Ú
+							//if(runstep2==8) process=3;  //ÅĞ¶ÏÎ´Ëø¶¨
 						}
 						else
 						{
@@ -207,15 +207,15 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 								writeplanbuf();
 								SVspeed=runparameter[formula][step].speed;
 							}
-							else sendresdmotor(); //å¾ªç¯è¯»ç”µæœºçŠ¶æ€  ç”µæœºä¸²å£
+							else sendresdmotor(); //Ñ­»·¶Áµç»ú×´Ì¬  µç»ú´®¿Ú
 						}
 					}
 				}
 				
-				//è¿è¡Œæ—¶é—´ !=0
+				//ÔËĞĞÊ±¼ä !=0
 				else
 				{
-					sendresdmotor(); //å¾ªç¯è¯»ç”µæœºçŠ¶æ€   ç”µæœºä¸²å£
+					sendresdmotor(); //Ñ­»·¶Áµç»ú×´Ì¬   µç»ú´®¿Ú
 				
 				}
 				
@@ -224,14 +224,14 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 		  }
 			else 
 			{
-				stopmotor();  //åœè½¦   ç”µæœºä¸²å£
-				readmotorflag=true;            //å‘¨æœŸè¯»motoræ“ä½œ
+				stopmotor();  //Í£³µ   µç»ú´®¿Ú
+				readmotorflag=true;            //ÖÜÆÚ¶Ámotor²Ù×÷
 				readmotortime=READMOTORTIME;
 			}
 	  }
 		
-		//æ¨¡å¼ä¸€æ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ “å‘½ä»¤  2ï¼šå¼€æ “å»¶æ—¶2ç§’   3ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    4ï¼šç­‰å¾…é€Ÿåº¦è¾¾æ ‡   5ï¼šå‘æŒ‚æ “å‘½ä»¤   6ï¼šç­‰å¾…é™é€Ÿ   7ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº
-		//æ¨¡å¼äºŒæ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ°”æ³µå‘½ä»¤  2ï¼šå¼€æ°”æ³µå»¶æ—¶3ç§’   3ï¼šå‘å¼€æ “å‘½ä»¤  4ï¼šå¼€æ “å»¶æ—¶2ç§’   5ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    6ï¼šstep5ç­‰å¾…é€Ÿåº¦è¾¾æ ‡   7ï¼šå‘æŒ‚æ “å‘½ä»¤   8ï¼šç­‰å¾…é™é€Ÿ   9ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº  10ï¼šå‘å…³æ°”æ³µå‘½ä»¤
+		//Ä£Ê½Ò»²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªË¨ÃüÁî  2£º¿ªË¨ÑÓÊ±2Ãë   3£º·¢ËÍÆô¶¯µç»úÃüÁî    4£ºµÈ´ıËÙ¶È´ï±ê   5£º·¢¹ÒË¨ÃüÁî   6£ºµÈ´ı½µËÙ   7£ºÇåÔËĞĞÊ±¼äÍ£»ú
+		//Ä£Ê½¶ş²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªÆø±ÃÃüÁî  2£º¿ªÆø±ÃÑÓÊ±3Ãë   3£º·¢¿ªË¨ÃüÁî  4£º¿ªË¨ÑÓÊ±2Ãë   5£º·¢ËÍÆô¶¯µç»úÃüÁî    6£ºstep5µÈ´ıËÙ¶È´ï±ê   7£º·¢¹ÒË¨ÃüÁî   8£ºµÈ´ı½µËÙ   9£ºÇåÔËĞĞÊ±¼äÍ£»ú  10£º·¢¹ØÆø±ÃÃüÁî
 		if(modeNo==1)
 		{
 			if(runstep1==2&&bolttime==0)
@@ -262,22 +262,22 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 		if(neworder)
 		{
 			neworder=false;
-			if(startwork==0)           //play_flagè¿è¡Œä¸­æ ‡å¿—ï¼Œ0:æœªè¿è¡Œï¼Œ1ï¼šè¿è¡Œä¸­ï¼Œ2åœè½¦ä¸­     startwork å¯åœæŒ‡ä»¤
+			if(startwork==0)           //play_flagÔËĞĞÖĞ±êÖ¾£¬0:Î´ÔËĞĞ£¬1£ºÔËĞĞÖĞ£¬2Í£³µÖĞ     startwork ÆôÍ£Ö¸Áî
 			{
 				if(play_flag==1)
 				{
 					PVtime=0;					
-					if(modeNo==2) step=5;   // modeNo  0ï¼šç³»ç»Ÿå‚æ•° 1ï¼šå•æ­¥  2ï¼šå¤šæ­¥ 3.æŠ¥é”™
+					if(modeNo==2) step=5;   // modeNo  0£ºÏµÍ³²ÎÊı 1£ºµ¥²½  2£º¶à²½ 3.±¨´í
 					plansteplong=7;
-					readmotorflag=true;                   //å‘¨æœŸè¯»motoræ“ä½œ
+					readmotorflag=true;                   //ÖÜÆÚ¶Ámotor²Ù×÷
 					readmotortime=READMOTORTIME;
 				}
 				else if((play_flag==0)&&(modeNo==2)&&(runstep2==10))
 				{
-					readmotorflag=false;                   //æš‚åœå‘¨æœŸè¯»motoræ“ä½œ
+					readmotorflag=false;                   //ÔİÍ£ÖÜÆÚ¶Ámotor²Ù×÷
 					readmotortime=READMOTORTIME;
 					delay_ms(150);
-					memset(usart2_recebuf,0,wordsize2_rece); //æ¸…ç†ä¸²å£2
+					memset(usart2_recebuf,0,wordsize2_rece); //ÇåÀí´®¿Ú2
 					buf2mumber=0;
 					Usart2_overtime=RECEovertime2; 
 					usart2_rec=stop;
@@ -289,27 +289,27 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 			
 			else if((startwork==0xFF)&&(runstep1||runstep2))
 			{
-				readmotorflag=false;                   //æš‚åœå‘¨æœŸè¯»motoræ“ä½œ
+				readmotorflag=false;                   //ÔİÍ£ÖÜÆÚ¶Ámotor²Ù×÷
 				readmotortime=READMOTORTIME;
 				delay_ms(150);
-				memset(usart2_recebuf,0,wordsize2_rece); //æ¸…ç†ä¸²å£2
+				memset(usart2_recebuf,0,wordsize2_rece); //ÇåÀí´®¿Ú2
 				buf2mumber=0;
 				Usart2_overtime=RECEovertime2; 
 				usart2_rec=stop;
 				
 				if(modeNo==1)
 				{
-					switch(runstep1)  //æ¨¡å¼ä¸€æ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ “å‘½ä»¤  2ï¼šå¼€æ “å»¶æ—¶2ç§’   3ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    4ï¼šç­‰å¾…é€Ÿåº¦è¾¾æ ‡   5ï¼šå‘æŒ‚æ “å‘½ä»¤   6ï¼šç­‰å¾…é™é€Ÿ   7ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº
+					switch(runstep1)  //Ä£Ê½Ò»²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªË¨ÃüÁî  2£º¿ªË¨ÑÓÊ±2Ãë   3£º·¢ËÍÆô¶¯µç»úÃüÁî    4£ºµÈ´ıËÙ¶È´ï±ê   5£º·¢¹ÒË¨ÃüÁî   6£ºµÈ´ı½µËÙ   7£ºÇåÔËĞĞÊ±¼äÍ£»ú
 					{
 						case 1:	boltorder=0x00;  //boltorder=0xFF;
 						        writeboltbuf(boltorder);
 										break;
 						
-						case 3:	formula=0,step=0;  //é…æ–¹ç¼–å·ï¼Œæ­¥éª¤ç¼–å· 
+						case 3:	formula=0,step=0;  //Åä·½±àºÅ£¬²½Öè±àºÅ 
 										SVspeed=runparameter[formula][step].speed;
 										SVtime=runparameter[formula][step].time;
 										
-										writeplanbuf();    //åŠ è½½æ•°æ®å¹¶å‘é€ç¬¬ä¸€ç»„æ•°æ®
+										writeplanbuf();    //¼ÓÔØÊı¾İ²¢·¢ËÍµÚÒ»×éÊı¾İ
 										break;
 						
 						case 5:	boltorder=0xFF;  //boltorder=0x00;
@@ -326,7 +326,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 				
 				else if(modeNo==2)
 				{
-					switch(runstep2) //æ¨¡å¼äºŒæ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ°”æ³µå‘½ä»¤  2ï¼šå¼€æ°”æ³µå»¶æ—¶3ç§’   3ï¼šå‘å¼€æ “å‘½ä»¤  4ï¼šå¼€æ “å»¶æ—¶2ç§’   5ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    6ï¼šstep5ç­‰å¾…é€Ÿåº¦è¾¾æ ‡   7ï¼šå‘æŒ‚æ “å‘½ä»¤   8ï¼šç­‰å¾…é™é€Ÿ   9ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº  10ï¼šå‘å…³æ°”æ³µå‘½ä»¤
+					switch(runstep2) //Ä£Ê½¶ş²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªÆø±ÃÃüÁî  2£º¿ªÆø±ÃÑÓÊ±3Ãë   3£º·¢¿ªË¨ÃüÁî  4£º¿ªË¨ÑÓÊ±2Ãë   5£º·¢ËÍÆô¶¯µç»úÃüÁî    6£ºstep5µÈ´ıËÙ¶È´ï±ê   7£º·¢¹ÒË¨ÃüÁî   8£ºµÈ´ı½µËÙ   9£ºÇåÔËĞĞÊ±¼äÍ£»ú  10£º·¢¹ØÆø±ÃÃüÁî
 					{
 						case 1:	pumporder=0xFF;
 										writepumpbuf(pumporder);
@@ -341,7 +341,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 										SVspeed=runparameter[formula][step].speed;
 										SVtime=runparameter[formula][step].time;
 						
-										writeplanbuf();    //åŠ è½½æ•°æ®å¹¶å‘é€ç¬¬ä¸€ç»„æ•°æ®
+										writeplanbuf();    //¼ÓÔØÊı¾İ²¢·¢ËÍµÚÒ»×éÊı¾İ
 										break;
 						
 						case 7:	boltorder=0xFF;  //boltorder=0x00;
@@ -359,33 +359,33 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 					}
 				}
 			}
-			else readmotorflag=true;            //å‘¨æœŸè¯»motoræ“ä½œ
+			else readmotorflag=true;            //ÖÜÆÚ¶Ámotor²Ù×÷
 		}
 
 
-		//æ ¡éªŒä¸²å£1æ”¶åˆ°çš„ *MODBUS-RTUå‘½ä»¤æ ¼å¼* çš„æ•°æ®
+		//Ğ£Ñé´®¿Ú1ÊÕµ½µÄ *MODBUS-RTUÃüÁî¸ñÊ½* µÄÊı¾İ
 				if((usart1check==stop)&&(usart1_rec==succeed))
 		{
 			u16 test;
 			u16 StartAddress,RegisterNumber,NuAddress;
 			
 			usart1check=start;
-      usart1check=stop;                        //ä¸²å£1æ¥æ”¶æ•°æ®æ ¡éªŒ
-			buf1mumber=0;                            //ä¸²å£1æ¥æ”¶bufæ•°ç»„è®¡
-			usart1_rec=stop;                         //ä¸²å£1æ¥æ”¶çŠ¶æ€	
+      usart1check=stop;                        //´®¿Ú1½ÓÊÕÊı¾İĞ£Ñé
+			buf1mumber=0;                            //´®¿Ú1½ÓÊÕbufÊı×é¼Æ
+			usart1_rec=stop;                         //´®¿Ú1½ÓÊÕ×´Ì¬	
 			
-			usart1_recebuf[0]=DeviceAddress;         //åŠ å…¥æœ¬æœºåœ°å€ä¸€åŒæ ¡éªŒ
-			test=CalcCrc(usart1_recebuf,(wordsize1_rece-2));    //è®¡ç®—æ ¡éªŒå€¼
-			//-------æœ¬æœºåœ°å€-------			
-			if((usart1_recebuf[wordsize1_rece-2]+usart1_recebuf[wordsize1_rece-1]*256)==test)   //æ ¡éªŒæ­£ç¡®&&æœ¬æœºåœ°å€æ­£ç¡®
+			usart1_recebuf[0]=DeviceAddress;         //¼ÓÈë±¾»úµØÖ·Ò»Í¬Ğ£Ñé
+			test=CalcCrc(usart1_recebuf,(wordsize1_rece-2));    //¼ÆËãĞ£ÑéÖµ
+			//-------±¾»úµØÖ·-------			
+			if((usart1_recebuf[wordsize1_rece-2]+usart1_recebuf[wordsize1_rece-1]*256)==test)   //Ğ£ÑéÕıÈ·&&±¾»úµØÖ·ÕıÈ·
 			{
 				delay_ms(2);
 				
 				if(usart1_recebuf[1]!=0x10)
 				{
-					memcpy(&ModbusRtu_order,usart1_recebuf,wordsize1_rece);   //å°†ä¸²å£1æ”¶åˆ°çš„æ•°æ®è£…å…¥è§£æç»“æ„ä½“
-				  StartAddress=ModbusRtu_order.StartAddressH*256+ModbusRtu_order.StartAddressL;		      //åˆå¹¶å¼€å§‹åœ°å€	
-				  RegisterNumber=ModbusRtu_order.RegisterNumberH*256+ModbusRtu_order.RegisterNumberL;   //åˆå¹¶ï¼ˆå¯„å­˜å™¨æ•°é‡/å†™å…¥å‚æ•°ï¼‰
+					memcpy(&ModbusRtu_order,usart1_recebuf,wordsize1_rece);   //½«´®¿Ú1ÊÕµ½µÄÊı¾İ×°Èë½âÎö½á¹¹Ìå
+				  StartAddress=ModbusRtu_order.StartAddressH*256+ModbusRtu_order.StartAddressL;		      //ºÏ²¢¿ªÊ¼µØÖ·	
+				  RegisterNumber=ModbusRtu_order.RegisterNumberH*256+ModbusRtu_order.RegisterNumberL;   //ºÏ²¢£¨¼Ä´æÆ÷ÊıÁ¿/Ğ´Èë²ÎÊı£©
 				
 					if(ModbusRtu_order.FunctionCode==0x03)
 					{
@@ -396,7 +396,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 						n=2;
 						for(i=0;i<RegisterNumber;i++)
 						{
-						 switch (StartAddress)         //å¾ªç¯æ·»åŠ å¯„å­˜å™¨æ•°æ®   V_power,I_hot,L_vacuum,I_motor
+						 switch (StartAddress)         //Ñ­»·Ìí¼Ó¼Ä´æÆ÷Êı¾İ   V_power,I_hot,L_vacuum,I_motor
 						 {
 //               case 0x0000:usart1_sendbuf[n+1]=DeviceAddress>>8;
 //												   usart1_sendbuf[n+2]=DeviceAddress&0x00FF;
@@ -408,390 +408,390 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 //						             else if(usartbound1==115200) usart1_sendbuf[n+2]=4;
 //											   break;
 							 
-							 case 0x0100:usart1_sendbuf[n+1]=runparameter[0][1].acc>>8;      //ç³»ç»Ÿå‡é€Ÿåº¦
+							 case 0x0100:usart1_sendbuf[n+1]=runparameter[0][1].acc>>8;      //ÏµÍ³¼õËÙ¶È
 													 usart1_sendbuf[n+2]=runparameter[0][1].acc&0x00FF;
 													 break;
-							 case 0x0101:usart1_sendbuf[n+1]=startwork>>8;      //å¯åœæŒ‡ä»¤
+							 case 0x0101:usart1_sendbuf[n+1]=startwork>>8;      //ÆôÍ£Ö¸Áî
 													 usart1_sendbuf[n+2]=startwork&0x00FF;
 													 break;
-							 case 0x0102:usart1_sendbuf[n+1]=modeNo>>8;         //è¿è¡Œæ¨¡å¼ 0ï¼šç³»ç»Ÿå‚æ•° 1ï¼šå•æ­¥  2ï¼šå¤šæ­¥ 3.æŠ¥é”™
+							 case 0x0102:usart1_sendbuf[n+1]=modeNo>>8;         //ÔËĞĞÄ£Ê½ 0£ºÏµÍ³²ÎÊı 1£ºµ¥²½  2£º¶à²½ 3.±¨´í
 													 usart1_sendbuf[n+2]=modeNo&0x00FF;
 													 break;
-							 case 0x0103:usart1_sendbuf[n+1]=S_formula>>8;      //é…æ–¹ç¼–å·
+							 case 0x0103:usart1_sendbuf[n+1]=S_formula>>8;      //Åä·½±àºÅ
 													 usart1_sendbuf[n+2]=S_formula&0x00FF;
 													 break;
-						   case 0x0104:usart1_sendbuf[n+1]=step>>8;           //æ­¥éª¤ç¼–å·
+						   case 0x0104:usart1_sendbuf[n+1]=step>>8;           //²½Öè±àºÅ
 													 usart1_sendbuf[n+2]=step&0x00FF;
 													 break;
-							 case 0x0105:usart1_sendbuf[n+1]=play_flag>>8;      //è¿è¡Œä¸­æ ‡å¿—ï¼Œ0:æœªè¿è¡Œï¼Œ1ï¼šè¿è¡Œä¸­ï¼Œ2åœè½¦ä¸­
+							 case 0x0105:usart1_sendbuf[n+1]=play_flag>>8;      //ÔËĞĞÖĞ±êÖ¾£¬0:Î´ÔËĞĞ£¬1£ºÔËĞĞÖĞ£¬2Í£³µÖĞ
 													 usart1_sendbuf[n+2]=play_flag&0x00FF;
 													 break;
-							 case 0x0106:usart1_sendbuf[n+1]=PVspeed>>8;        //å½“å‰é€Ÿåº¦
+							 case 0x0106:usart1_sendbuf[n+1]=PVspeed>>8;        //µ±Ç°ËÙ¶È
 													 usart1_sendbuf[n+2]=PVspeed&0x00FF;
 													 break;
-							 case 0x0107:usart1_sendbuf[n+1]=PVtime>>8;         //å‰©ä½™æ—¶é•¿
+							 case 0x0107:usart1_sendbuf[n+1]=PVtime>>8;         //Ê£ÓàÊ±³¤
 													 usart1_sendbuf[n+2]=PVtime&0x00FF;
 													 break;
-							 case 0x0108:usart1_sendbuf[n+1]=erroNO>>8;         //é”™è¯¯ç¼–å·
+							 case 0x0108:usart1_sendbuf[n+1]=erroNO>>8;         //´íÎó±àºÅ
 													 usart1_sendbuf[n+2]=erroNO&0x00FF;
 													 break;
-							 case 0x0109:usart1_sendbuf[n+1]=process>>8;         //æµç¨‹
+							 case 0x0109:usart1_sendbuf[n+1]=process>>8;         //Á÷³Ì
 													 usart1_sendbuf[n+2]=process&0x00FF;
 													 break;
-							 case 0x010A:usart1_sendbuf[n+1]=runstep1>>8;        //åˆå§‹åŒ–è¿›ç¨‹
+							 case 0x010A:usart1_sendbuf[n+1]=runstep1>>8;        //³õÊ¼»¯½ø³Ì
 													 usart1_sendbuf[n+2]=runstep1&0x00FF;
 													 break;
-							 case 0x010B:usart1_sendbuf[n+1]=runstep2>>8;        //åŒ€èƒ¶è¿›ç¨‹
+							 case 0x010B:usart1_sendbuf[n+1]=runstep2>>8;        //ÔÈ½º½ø³Ì
 													 usart1_sendbuf[n+2]=runstep2&0x00FF;
 													 break; 
-							 case 0x1000:usart1_sendbuf[n+1]=runparameter[0][0].speed>>8;        //è½¬é€Ÿ
+							 case 0x1000:usart1_sendbuf[n+1]=runparameter[0][0].speed>>8;        //×ªËÙ
 													 usart1_sendbuf[n+2]=runparameter[0][0].speed&0x00FF;
 													 break;
-							 case 0x1001:usart1_sendbuf[n+1]=runparameter[0][0].time>>8;         //æ—‹è½¬æ—¶é•¿
+							 case 0x1001:usart1_sendbuf[n+1]=runparameter[0][0].time>>8;         //Ğı×ªÊ±³¤
 													 usart1_sendbuf[n+2]=runparameter[0][0].time&0x00FF;
 													 break;
-							 case 0x1002:usart1_sendbuf[n+1]=runparameter[0][0].acc>>8;         //åŠ é€Ÿåº¦
+							 case 0x1002:usart1_sendbuf[n+1]=runparameter[0][0].acc>>8;         //¼ÓËÙ¶È
 													 usart1_sendbuf[n+2]=runparameter[0][0].acc&0x00FF;
 													 break;
 													 
 			        
-							//Aé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1100://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[1][1].speed>>8;        //è½¬é€Ÿ
+							//AÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1100://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[1][1].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[1][1].speed&0x00FF;
 													break;
-							case 0x1101://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[1][1].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1101://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[1][1].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[1][1].time&0x00FF;
 													break;
-							case 0x1102://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[1][1].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1102://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[1][1].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[1][1].acc&0x00FF;
 													break;
 								
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1103://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[1][2].speed>>8;        //è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1103://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[1][2].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[1][2].speed&0x00FF;
 													break;
-							case 0x1104://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[1][2].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1104://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[1][2].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[1][2].time&0x00FF;
 													break;
-							case 0x1105://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[1][2].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1105://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[1][2].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[1][2].acc&0x00FF;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1106://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[1][3].speed>>8;        //è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1106://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[1][3].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[1][3].speed&0x00FF;
 													break;
-							case 0x1107://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[1][3].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1107://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[1][3].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[1][3].time&0x00FF;
 													break;
-							case 0x1108://åŠ é€Ÿåº¦
-								          usart1_sendbuf[n+1]=runparameter[1][3].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1108://¼ÓËÙ¶È
+								          usart1_sendbuf[n+1]=runparameter[1][3].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[1][3].acc&0x00FF;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1109://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[1][4].speed>>8;        //è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1109://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[1][4].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[1][4].speed&0x00FF;
 													break;
-							case 0x110A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[1][4].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x110A://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[1][4].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[1][4].time&0x00FF;
 													break;
-							case 0x110B://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[1][4].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x110B://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[1][4].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[1][4].acc&0x00FF;
 													break;
-							//ç¬¬äº”æ­¥ï¼š
-							case 0x110C://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[1][5].speed>>8;        //è½¬é€Ÿ
+							//µÚÎå²½£º
+							case 0x110C://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[1][5].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[1][5].speed&0x00FF;
 													break;
-							case 0x110D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[1][5].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x110D://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[1][5].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[1][5].time&0x00FF;
 													break;
-							case 0x110E://åŠ é€Ÿåº¦										 
-													usart1_sendbuf[n+1]=runparameter[1][5].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x110E://¼ÓËÙ¶È										 
+													usart1_sendbuf[n+1]=runparameter[1][5].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[1][5].acc&0x00FF;
 													break;
 							
-							//Bé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1200://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[2][1].speed>>8;        //è½¬é€Ÿ
+							//BÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1200://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[2][1].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[2][1].speed&0x00FF;
 													break;
-							case 0x1201://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[2][1].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1201://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[2][1].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[2][1].time&0x00FF;
 													break;
-							case 0x1202://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[2][1].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1202://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[2][1].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[2][1].acc&0x00FF;
 													break;
 								
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1203://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[2][2].speed>>8;        //è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1203://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[2][2].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[2][2].speed&0x00FF;
 													break;
-							case 0x1204://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[2][2].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1204://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[2][2].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[2][2].time&0x00FF;
 													break;
-							case 0x1205://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[2][2].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1205://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[2][2].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[2][2].acc&0x00FF;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1206://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[2][3].speed>>8;        //è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1206://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[2][3].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[2][3].speed&0x00FF;
 													break;
-							case 0x1207://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[2][3].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1207://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[2][3].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[2][3].time&0x00FF;
 													break;
-							case 0x1208://åŠ é€Ÿåº¦
-								          usart1_sendbuf[n+1]=runparameter[2][3].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1208://¼ÓËÙ¶È
+								          usart1_sendbuf[n+1]=runparameter[2][3].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[2][3].acc&0x00FF;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1209://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[2][4].speed>>8;        //è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1209://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[2][4].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[2][4].speed&0x00FF;
 													break;
-							case 0x120A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[2][4].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x120A://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[2][4].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[2][4].time&0x00FF;
 													break;
-							case 0x120B://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[2][4].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x120B://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[2][4].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[2][4].acc&0x00FF;
 													break;
-							//ç¬¬äº”æ­¥ï¼š
-							case 0x120C://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[2][5].speed>>8;        //è½¬é€Ÿ
+							//µÚÎå²½£º
+							case 0x120C://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[2][5].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[2][5].speed&0x00FF;
 													break;
-							case 0x120D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[2][5].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x120D://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[2][5].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[2][5].time&0x00FF;
 													break;
-							case 0x120E://åŠ é€Ÿåº¦										 
-													usart1_sendbuf[n+1]=runparameter[2][5].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x120E://¼ÓËÙ¶È										 
+													usart1_sendbuf[n+1]=runparameter[2][5].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[2][5].acc&0x00FF;
 													break;
 	
-							//Cé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1300://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[3][1].speed>>8;        //è½¬é€Ÿ
+							//CÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1300://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[3][1].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[3][1].speed&0x00FF;
 													break;
-							case 0x1301://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[3][1].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1301://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[3][1].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[3][1].time&0x00FF;
 													break;
-							case 0x1302://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[3][1].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1302://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[3][1].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[3][1].acc&0x00FF;
 													break;
 								
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1303://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[3][2].speed>>8;        //è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1303://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[3][2].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[3][2].speed&0x00FF;
 													break;
-							case 0x1304://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[3][2].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1304://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[3][2].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[3][2].time&0x00FF;
 													break;
-							case 0x1305://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[3][2].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1305://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[3][2].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[3][2].acc&0x00FF;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1306://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[3][3].speed>>8;        //è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1306://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[3][3].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[3][3].speed&0x00FF;
 													break;
-							case 0x1307://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[3][3].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1307://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[3][3].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[3][3].time&0x00FF;
 													break;
-							case 0x1308://åŠ é€Ÿåº¦
-								          usart1_sendbuf[n+1]=runparameter[3][3].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1308://¼ÓËÙ¶È
+								          usart1_sendbuf[n+1]=runparameter[3][3].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[3][3].acc&0x00FF;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1309://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[3][4].speed>>8;        //è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1309://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[3][4].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[3][4].speed&0x00FF;
 													break;
-							case 0x130A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[3][4].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x130A://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[3][4].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[3][4].time&0x00FF;
 													break;
-							case 0x130B://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[3][4].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x130B://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[3][4].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[3][4].acc&0x00FF;
 													break;
-							//ç¬¬äº”æ­¥ï¼š
-							case 0x130C://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[3][5].speed>>8;        //è½¬é€Ÿ
+							//µÚÎå²½£º
+							case 0x130C://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[3][5].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[3][5].speed&0x00FF;
 													break;
-							case 0x130D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[3][5].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x130D://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[3][5].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[3][5].time&0x00FF;
 													break;
-							case 0x130E://åŠ é€Ÿåº¦										 
-													usart1_sendbuf[n+1]=runparameter[3][5].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x130E://¼ÓËÙ¶È										 
+													usart1_sendbuf[n+1]=runparameter[3][5].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[3][5].acc&0x00FF;
 													break;
 							
-							//Dé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1400://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[4][1].speed>>8;        //è½¬é€Ÿ
+							//DÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1400://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[4][1].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[4][1].speed&0x00FF;
 													break;
-							case 0x1401://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[4][1].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1401://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[4][1].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[4][1].time&0x00FF;
 													break;
-							case 0x1402://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[4][1].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1402://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[4][1].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[4][1].acc&0x00FF;
 													break;
 								
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1403://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[4][2].speed>>8;        //è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1403://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[4][2].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[4][2].speed&0x00FF;
 													break;
-							case 0x1404://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[4][2].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1404://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[4][2].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[4][2].time&0x00FF;
 													break;
-							case 0x1405://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[4][2].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1405://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[4][2].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[4][2].acc&0x00FF;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1406://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[4][3].speed>>8;        //è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1406://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[4][3].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[4][3].speed&0x00FF;
 													break;
-							case 0x1407://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[4][3].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1407://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[4][3].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[4][3].time&0x00FF;
 													break;
-							case 0x1408://åŠ é€Ÿåº¦
-								          usart1_sendbuf[n+1]=runparameter[4][3].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1408://¼ÓËÙ¶È
+								          usart1_sendbuf[n+1]=runparameter[4][3].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[4][3].acc&0x00FF;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1409://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[4][4].speed>>8;        //è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1409://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[4][4].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[4][4].speed&0x00FF;
 													break;
-							case 0x140A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[4][4].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x140A://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[4][4].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[4][4].time&0x00FF;
 													break;
-							case 0x140B://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[4][4].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x140B://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[4][4].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[4][4].acc&0x00FF;
 													break;
-							//ç¬¬äº”æ­¥ï¼š
-							case 0x140C://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[4][5].speed>>8;        //è½¬é€Ÿ
+							//µÚÎå²½£º
+							case 0x140C://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[4][5].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[4][5].speed&0x00FF;
 													break;
-							case 0x140D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[4][5].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x140D://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[4][5].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[4][5].time&0x00FF;
 													break;
-							case 0x140E://åŠ é€Ÿåº¦										 
-													usart1_sendbuf[n+1]=runparameter[4][5].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x140E://¼ÓËÙ¶È										 
+													usart1_sendbuf[n+1]=runparameter[4][5].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[4][5].acc&0x00FF;
 													break;
 							
-							//Eé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1500://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[5][1].speed>>8;        //è½¬é€Ÿ
+							//EÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1500://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[5][1].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[5][1].speed&0x00FF;
 													break;
-							case 0x1501://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[5][1].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1501://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[5][1].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[5][1].time&0x00FF;
 													break;
-							case 0x1502://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[5][1].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1502://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[5][1].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[5][1].acc&0x00FF;
 													break;
 								
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1503://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[5][2].speed>>8;        //è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1503://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[5][2].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[5][2].speed&0x00FF;
 													break;
-							case 0x1504://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[5][2].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1504://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[5][2].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[5][2].time&0x00FF;
 													break;
-							case 0x1505://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[5][2].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1505://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[5][2].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[5][2].acc&0x00FF;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1506://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[5][3].speed>>8;        //è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1506://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[5][3].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[5][3].speed&0x00FF;
 													break;
-							case 0x1507://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[5][3].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x1507://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[5][3].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[5][3].time&0x00FF;
 													break;
-							case 0x1508://åŠ é€Ÿåº¦
-								          usart1_sendbuf[n+1]=runparameter[5][3].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x1508://¼ÓËÙ¶È
+								          usart1_sendbuf[n+1]=runparameter[5][3].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[5][3].acc&0x00FF;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1509://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[5][4].speed>>8;        //è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1509://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[5][4].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[5][4].speed&0x00FF;
 													break;
-							case 0x150A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[5][4].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x150A://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[5][4].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[5][4].time&0x00FF;
 													break;
-							case 0x150B://åŠ é€Ÿåº¦
-													usart1_sendbuf[n+1]=runparameter[5][4].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x150B://¼ÓËÙ¶È
+													usart1_sendbuf[n+1]=runparameter[5][4].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[5][4].acc&0x00FF;
 													break;
-							//ç¬¬äº”æ­¥ï¼š
-							case 0x150C://è½¬é€Ÿ
-													usart1_sendbuf[n+1]=runparameter[5][5].speed>>8;        //è½¬é€Ÿ
+							//µÚÎå²½£º
+							case 0x150C://×ªËÙ
+													usart1_sendbuf[n+1]=runparameter[5][5].speed>>8;        //×ªËÙ
 													usart1_sendbuf[n+2]=runparameter[5][5].speed&0x00FF;
 													break;
-							case 0x150D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
-													usart1_sendbuf[n+1]=runparameter[5][5].time>>8;         //æ—‹è½¬æ—¶é•¿
+							case 0x150D://Ğı×ªÊ±³¤£¨Ãë£©
+													usart1_sendbuf[n+1]=runparameter[5][5].time>>8;         //Ğı×ªÊ±³¤
 													usart1_sendbuf[n+2]=runparameter[5][5].time&0x00FF;
 													break;
-							case 0x150E://åŠ é€Ÿåº¦										 
-													usart1_sendbuf[n+1]=runparameter[5][5].acc>>8;         //åŠ é€Ÿåº¦
+							case 0x150E://¼ÓËÙ¶È										 
+													usart1_sendbuf[n+1]=runparameter[5][5].acc>>8;         //¼ÓËÙ¶È
 													usart1_sendbuf[n+2]=runparameter[5][5].acc&0x00FF;
 													break;
 							
@@ -802,11 +802,11 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 						 StartAddress++;
 						 n=n+2;
 						}
-						test=CalcCrc(usart1_sendbuf,n+1);    //è®¡ç®—æ ¡éªŒå€¼
+						test=CalcCrc(usart1_sendbuf,n+1);    //¼ÆËãĞ£ÑéÖµ
 						usart1_sendbuf[n+1]=test&0x00FF;
 						usart1_sendbuf[n+2]=test>>8;
 						
-						//å›å¤ä¸Šä½æœº
+						//»Ø¸´ÉÏÎ»»ú
 						USART1_SendBuf485(usart1_sendbuf,n+3);   //RS-485  
 
 					 }
@@ -816,45 +816,45 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 							
 							switch (StartAddress)
 							{
-//								case 0x0000:    //æ›´æ”¹æœ¬æœºåœ°å€
+//								case 0x0000:    //¸ü¸Ä±¾»úµØÖ·
 //														if(RegisterNumber<255&&RegisterNumber>0)
 //														{	
 //															DeviceParameter.Addr=RegisterNumber;
 //															DeviceAddress=RegisterNumber;
-//															//å›åº”ä¸Šä½æœº
+//															//»ØÓ¦ÉÏÎ»»ú
 //															memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //															USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
-//															//ä»æ–°å†™å…¥flash
+//															//´ÓĞÂĞ´Èëflash
 //															if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-//															RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash
+//															RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash
 //														}
 //														break;
 //								
-//								case 0x0001:   //æ›´æ”¹ä¸²å£æ³¢ç‰¹ç‡
+//								case 0x0001:   //¸ü¸Ä´®¿Ú²¨ÌØÂÊ
 //														if(1==RegisterNumber) DeviceParameter.Bound=9600;
 //														else if(2==RegisterNumber) DeviceParameter.Bound=19200;
 //														else if(3==RegisterNumber) DeviceParameter.Bound=38400;
 //														else if(4==RegisterNumber) DeviceParameter.Bound=115200;
 //														else break;
 //														usartbound1=DeviceParameter.Bound;
-//														//å›åº”ä¸Šä½æœº
+//														//»ØÓ¦ÉÏÎ»»ú
 //														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
-//														//ä»æ–°å†™å…¥flash
+//														//´ÓĞÂĞ´Èëflash
 //														if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-//														RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash
-//														uart_init(usartbound1);	 //ä¸²å£åˆå§‹åŒ–
+//														RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash
+//														uart_init(usartbound1);	 //´®¿Ú³õÊ¼»¯
 //														break;
 								
-								case 0x0100:   //å‡é€Ÿåº¦
+								case 0x0100:   //¼õËÙ¶È
 														runparameter[0][1].acc=RegisterNumber;
-														//ä»æ–°å†™å…¥flash
-														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-														//å›åº”ä¸Šä½æœº
+														//´ÓĞÂĞ´Èëflash
+														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+														//»ØÓ¦ÉÏÎ»»ú
 														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 														break;
-							  case 0x0101:   //å¯åœ
+							  case 0x0101:   //ÆôÍ£
 														if(RegisterNumber==0||RegisterNumber==0xFF)
 														{
 														  startwork=RegisterNumber;
@@ -863,10 +863,10 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 															{
 																if(modeNo==1) runstep1=1;
 																else if(modeNo==2) runstep2=1;
-																process=1;  //æµç¨‹æ ‡è¯†   0ï¼šå¼€æœºåˆå§‹çŠ¶æ€   1ï¼šæ”¶åˆ°å¼€å§‹å‘½ä»¤è¿›å…¥æµç¨‹    2ï¼šæ­£å¸¸ç»“æŸ   3ï¼šä¸­é€”æ”¶åˆ°åœæ­¢å‘½ä»¤    4ï¼šä¸­é€”åœæ­¢
+																process=1;  //Á÷³Ì±êÊ¶   0£º¿ª»ú³õÊ¼×´Ì¬   1£ºÊÕµ½¿ªÊ¼ÃüÁî½øÈëÁ÷³Ì    2£ºÕı³£½áÊø   3£ºÖĞÍ¾ÊÕµ½Í£Ö¹ÃüÁî    4£ºÖĞÍ¾Í£Ö¹
 															}
 															if(play_flag==0&&startwork==0&&PVspeed>2)  play_flag=1;
-															if(play_flag&&startwork==0)  process=3;   //æµç¨‹æ ‡è¯†   0ï¼šå¼€æœºåˆå§‹çŠ¶æ€   1ï¼šæ”¶åˆ°å¼€å§‹å‘½ä»¤è¿›å…¥æµç¨‹    2ï¼šæ­£å¸¸ç»“æŸ   3ï¼šä¸­é€”æ”¶åˆ°åœæ­¢å‘½ä»¤    4ï¼šä¸­é€”åœæ­¢
+															if(play_flag&&startwork==0)  process=3;   //Á÷³Ì±êÊ¶   0£º¿ª»ú³õÊ¼×´Ì¬   1£ºÊÕµ½¿ªÊ¼ÃüÁî½øÈëÁ÷³Ì    2£ºÕı³£½áÊø   3£ºÖĞÍ¾ÊÕµ½Í£Ö¹ÃüÁî    4£ºÖĞÍ¾Í£Ö¹
 															if(process==1&&play_flag==0&&startwork==0)
 															{
 																if(modeNo==1)
@@ -888,534 +888,534 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 															}
 															if((process==0||process==2||process==4)&&startwork==0)  neworder=false;
 														}
-														//å›åº”ä¸Šä½æœº
+														//»ØÓ¦ÉÏÎ»»ú
 														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 														break;
-								case 0x0102:   //å·¥ä½œæ¨¡å¼ï¼š1ï¼šå•æ­¥ï¼Œ2ï¼šå¤šæ­¥ï¼Œ3ï¼šæŠ¥é”™ï¼Œ0ï¼šç³»ç»Ÿå‚æ•°
+								case 0x0102:   //¹¤×÷Ä£Ê½£º1£ºµ¥²½£¬2£º¶à²½£¬3£º±¨´í£¬0£ºÏµÍ³²ÎÊı
 														if(play_flag==0) modeNo=RegisterNumber;
-														//å›åº”ä¸Šä½æœº
+														//»ØÓ¦ÉÏÎ»»ú
 														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 														break;															
-								case 0x0103:   //é…æ–¹ç¼–å·
+								case 0x0103:   //Åä·½±àºÅ
 														S_formula=RegisterNumber;
-														//å›åº”ä¸Šä½æœº
+														//»ØÓ¦ÉÏÎ»»ú
 														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 														break;
-//								case 0x1000:   //å•æ­¥è½¬é€Ÿ
+//								case 0x1000:   //µ¥²½×ªËÙ
 //														runparameter[0][0].speed=RegisterNumber;
-//														//å›åº”ä¸Šä½æœº
+//														//»ØÓ¦ÉÏÎ»»ú
 //														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //														break;
-//								case 0x1001:   //å•æ­¥æ—‹è½¬æ—¶é•¿
+//								case 0x1001:   //µ¥²½Ğı×ªÊ±³¤
 //														runparameter[0][0].time=RegisterNumber;
-//														//å›åº”ä¸Šä½æœº
+//														//»ØÓ¦ÉÏÎ»»ú
 //														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //														break;
-//								case 0x1002:   //å•æ­¥åŠ é€Ÿåº¦
+//								case 0x1002:   //µ¥²½¼ÓËÙ¶È
 //														runparameter[0][0].acc=RegisterNumber;
-//														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//														//å›åº”ä¸Šä½æœº
+//														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//														//»ØÓ¦ÉÏÎ»»ú
 //														memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //														USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //														break;
 								
 								
-							//Aé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1100://è½¬é€Ÿ
+							//AÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1100://×ªËÙ
 													runparameter[1][1].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 							            break;
-							case 0x1101://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1101://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][1].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1102://åŠ é€Ÿåº¦
+							case 0x1102://¼ÓËÙ¶È
 													runparameter[1][1].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1103://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1103://×ªËÙ
 													runparameter[1][2].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1104://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1104://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][2].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1105://åŠ é€Ÿåº¦
+							case 0x1105://¼ÓËÙ¶È
 													runparameter[1][2].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1106://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1106://×ªËÙ
 													runparameter[1][3].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1107://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1107://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][3].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1108://åŠ é€Ÿåº¦
+							case 0x1108://¼ÓËÙ¶È
 								          runparameter[1][3].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1109://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1109://×ªËÙ
 													runparameter[1][4].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x110A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x110A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][4].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x110B://åŠ é€Ÿåº¦
+							case 0x110B://¼ÓËÙ¶È
 													runparameter[1][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-													//å›åº”ä¸Šä½æœº
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x110C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x110C://×ªËÙ
 //													runparameter[1][5].speed=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x110D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x110D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[1][5].time=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x110E://åŠ é€Ÿåº¦										 
+//							case 0x110E://¼ÓËÙ¶È										 
 //													runparameter[1][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//													//å›åº”ä¸Šä½æœº
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
 								
-							//Bé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1200://è½¬é€Ÿ
+							//BÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1200://×ªËÙ
 													runparameter[2][1].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 							            break;
-							case 0x1201://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1201://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][1].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1202://åŠ é€Ÿåº¦
+							case 0x1202://¼ÓËÙ¶È
 													runparameter[2][1].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1203://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1203://×ªËÙ
 													runparameter[2][2].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1204://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1204://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][2].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1205://åŠ é€Ÿåº¦
+							case 0x1205://¼ÓËÙ¶È
 													runparameter[2][2].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1206://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1206://×ªËÙ
 													runparameter[2][3].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1207://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1207://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][3].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1208://åŠ é€Ÿåº¦
+							case 0x1208://¼ÓËÙ¶È
 								          runparameter[2][3].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1209://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1209://×ªËÙ
 													runparameter[2][4].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x120A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x120A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][4].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x120B://åŠ é€Ÿåº¦
+							case 0x120B://¼ÓËÙ¶È
 													runparameter[2][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-													//å›åº”ä¸Šä½æœº
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x120C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x120C://×ªËÙ
 //													runparameter[2][5].speed=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x120D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x120D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[2][5].time=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x120E://åŠ é€Ÿåº¦										 
+//							case 0x120E://¼ÓËÙ¶È										 
 //													runparameter[2][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//													//å›åº”ä¸Šä½æœº
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
 							
-							//Cé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1300://è½¬é€Ÿ
+							//CÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1300://×ªËÙ
 													runparameter[3][1].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 							            break;
-							case 0x1301://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1301://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][1].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1302://åŠ é€Ÿåº¦
+							case 0x1302://¼ÓËÙ¶È
 													runparameter[3][1].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1303://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1303://×ªËÙ
 													runparameter[3][2].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1304://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1304://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][2].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1305://åŠ é€Ÿåº¦
+							case 0x1305://¼ÓËÙ¶È
 													runparameter[3][2].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1306://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1306://×ªËÙ
 													runparameter[3][3].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1307://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1307://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][3].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1308://åŠ é€Ÿåº¦
+							case 0x1308://¼ÓËÙ¶È
 								          runparameter[3][3].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1309://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1309://×ªËÙ
 													runparameter[3][4].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x130A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x130A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][4].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x130B://åŠ é€Ÿåº¦
+							case 0x130B://¼ÓËÙ¶È
 													runparameter[3][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-													//å›åº”ä¸Šä½æœº
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x130C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x130C://×ªËÙ
 //													runparameter[3][5].speed=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x130D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x130D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[3][5].time=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x130E://åŠ é€Ÿåº¦										 
+//							case 0x130E://¼ÓËÙ¶È										 
 //													runparameter[3][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//													//å›åº”ä¸Šä½æœº
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
 							
-							//Dé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1400://è½¬é€Ÿ
+							//DÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1400://×ªËÙ
 													runparameter[4][1].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 							            break;
-							case 0x1401://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1401://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][1].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1402://åŠ é€Ÿåº¦
+							case 0x1402://¼ÓËÙ¶È
 													runparameter[4][1].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1403://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1403://×ªËÙ
 													runparameter[4][2].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1404://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1404://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][2].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1405://åŠ é€Ÿåº¦
+							case 0x1405://¼ÓËÙ¶È
 													runparameter[4][2].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1406://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1406://×ªËÙ
 													runparameter[4][3].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1407://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1407://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][3].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1408://åŠ é€Ÿåº¦
+							case 0x1408://¼ÓËÙ¶È
 								          runparameter[4][3].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1409://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1409://×ªËÙ
 													runparameter[4][4].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x140A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x140A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][4].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x140B://åŠ é€Ÿåº¦
+							case 0x140B://¼ÓËÙ¶È
 													runparameter[4][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-													//å›åº”ä¸Šä½æœº
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x140C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x140C://×ªËÙ
 //													runparameter[4][5].speed=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x140D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x140D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[4][5].time=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x140E://åŠ é€Ÿåº¦										 
+//							case 0x140E://¼ÓËÙ¶È										 
 //													runparameter[4][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//													//å›åº”ä¸Šä½æœº
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
 							
-							//Eé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1500://è½¬é€Ÿ
+							//EÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1500://×ªËÙ
 													runparameter[5][1].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 							            break;
-							case 0x1501://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1501://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][1].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1502://åŠ é€Ÿåº¦
+							case 0x1502://¼ÓËÙ¶È
 													runparameter[5][1].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1503://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1503://×ªËÙ
 													runparameter[5][2].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1504://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1504://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][2].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1505://åŠ é€Ÿåº¦
+							case 0x1505://¼ÓËÙ¶È
 													runparameter[5][2].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1506://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1506://×ªËÙ
 													runparameter[5][3].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1507://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1507://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][3].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x1508://åŠ é€Ÿåº¦
+							case 0x1508://¼ÓËÙ¶È
 								          runparameter[5][3].acc=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1509://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1509://×ªËÙ
 													runparameter[5][4].speed=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x150A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x150A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][4].time=RegisterNumber;
-													//å›åº”ä¸Šä½æœº
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-							case 0x150B://åŠ é€Ÿåº¦
+							case 0x150B://¼ÓËÙ¶È
 													runparameter[5][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-													//å›åº”ä¸Šä½æœº
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+													//»ØÓ¦ÉÏÎ»»ú
 													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x150C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x150C://×ªËÙ
 //													runparameter[5][5].speed=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x150D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x150D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[5][5].time=RegisterNumber;
-//													//å›åº”ä¸Šä½æœº
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
-//							case 0x150E://åŠ é€Ÿåº¦										 
+//							case 0x150E://¼ÓËÙ¶È										 
 //													runparameter[5][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
-//													//å›åº”ä¸Šä½æœº
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
+//													//»ØÓ¦ÉÏÎ»»ú
 //													memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 //													USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
 //													break;
@@ -1426,24 +1426,24 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 					 }
 				
 			 
-				 else if(usart1_recebuf[1]==0x10)   //å¤šä¸ªæ•°æ®è®¾ç½®  ä¸‹ä½æœºå¯¹åº”06å‘½ä»¤   0x10åè®®è§£æ
+				 else if(usart1_recebuf[1]==0x10)   //¶à¸öÊı¾İÉèÖÃ  ÏÂÎ»»ú¶ÔÓ¦06ÃüÁî   0x10Ğ­Òé½âÎö
 				 {
 					 	char i,n=7;
 			  
-						StartAddress=usart1_recebuf[2]*256+usart1_recebuf[3];		  //åˆå¹¶å¼€å§‹åœ°å€	
-						NuAddress=usart1_recebuf[5]+usart1_recebuf[4]*256;	          //å¯„å­˜å™¨æ•°é‡
+						StartAddress=usart1_recebuf[2]*256+usart1_recebuf[3];		  //ºÏ²¢¿ªÊ¼µØÖ·	
+						NuAddress=usart1_recebuf[5]+usart1_recebuf[4]*256;	          //¼Ä´æÆ÷ÊıÁ¿
 						n=7;
 					
 						for(i=0;i<NuAddress;i++)
 						{
 							switch (StartAddress)
 							{
-								case 0x0100:   //å‡é€Ÿåº¦
+								case 0x0100:   //¼õËÙ¶È
 														runparameter[0][1].acc=RegisterNumber;
-														//ä»æ–°å†™å…¥flash
-														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+														//´ÓĞÂĞ´Èëflash
+														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 										        break;
-								case 0x0101:   //å¯åœ
+								case 0x0101:   //ÆôÍ£
 														if(RegisterNumber==0||RegisterNumber==0xFF)
 														{
 														  startwork=RegisterNumber;
@@ -1452,10 +1452,10 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 															{
 																if(modeNo==1) runstep1=1;
 																else if(modeNo==2) runstep2=1;
-																process=1;   //æµç¨‹æ ‡è¯†   0ï¼šå¼€æœºåˆå§‹çŠ¶æ€   1ï¼šæ”¶åˆ°å¼€å§‹å‘½ä»¤è¿›å…¥æµç¨‹    2ï¼šæ­£å¸¸ç»“æŸ   3ï¼šä¸­é€”æ”¶åˆ°åœæ­¢å‘½ä»¤    4ï¼šä¸­é€”åœæ­¢
+																process=1;   //Á÷³Ì±êÊ¶   0£º¿ª»ú³õÊ¼×´Ì¬   1£ºÊÕµ½¿ªÊ¼ÃüÁî½øÈëÁ÷³Ì    2£ºÕı³£½áÊø   3£ºÖĞÍ¾ÊÕµ½Í£Ö¹ÃüÁî    4£ºÖĞÍ¾Í£Ö¹
 															}
 															if(play_flag==0&&startwork==0&&PVspeed>2)  play_flag=1;
-															if(play_flag&&startwork==0)  process=3;   //æµç¨‹æ ‡è¯†   0ï¼šå¼€æœºåˆå§‹çŠ¶æ€   1ï¼šæ”¶åˆ°å¼€å§‹å‘½ä»¤è¿›å…¥æµç¨‹    2ï¼šæ­£å¸¸ç»“æŸ   3ï¼šä¸­é€”æ”¶åˆ°åœæ­¢å‘½ä»¤    4ï¼šä¸­é€”åœæ­¢
+															if(play_flag&&startwork==0)  process=3;   //Á÷³Ì±êÊ¶   0£º¿ª»ú³õÊ¼×´Ì¬   1£ºÊÕµ½¿ªÊ¼ÃüÁî½øÈëÁ÷³Ì    2£ºÕı³£½áÊø   3£ºÖĞÍ¾ÊÕµ½Í£Ö¹ÃüÁî    4£ºÖĞÍ¾Í£Ö¹
 															if(process==1&&play_flag==0&&startwork==0)
 															{
 																if(modeNo==1)
@@ -1478,291 +1478,291 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 															if((process==0||process==2||process==4)&&startwork==0)  neworder=false;
 														}
 										        break;								
-							  case 0x0102:   //å·¥ä½œæ¨¡å¼ï¼š1ï¼šå•æ­¥ï¼Œ2ï¼šå¤šæ­¥ï¼Œ3ï¼šæŠ¥é”™ï¼Œ0ï¼šç³»ç»Ÿå‚æ•°
+							  case 0x0102:   //¹¤×÷Ä£Ê½£º1£ºµ¥²½£¬2£º¶à²½£¬3£º±¨´í£¬0£ºÏµÍ³²ÎÊı
 														if(play_flag==0)  modeNo=RegisterNumber;
 										        break;
-							  case 0x0103:   //é…æ–¹ç¼–å·
+							  case 0x0103:   //Åä·½±àºÅ
 														S_formula=RegisterNumber;
 										        break;
-//								case 0x1000:   //å•æ­¥è½¬é€Ÿ
+//								case 0x1000:   //µ¥²½×ªËÙ
 //														runparameter[0][0].speed=RegisterNumber;
 //										        break;								
-//							  case 0x1001:   //å•æ­¥æ—‹è½¬æ—¶é•¿
+//							  case 0x1001:   //µ¥²½Ğı×ªÊ±³¤
 //														runparameter[0][0].time=RegisterNumber;
 //										        break;
-//							  case 0x1002:   //å•æ­¥åŠ é€Ÿåº¦
+//							  case 0x1002:   //µ¥²½¼ÓËÙ¶È
 //														runparameter[0][0].acc=RegisterNumber;
-//														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//														RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //										        break;
 								
-							//Aé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1100://è½¬é€Ÿ
+							//AÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1100://×ªËÙ
 													runparameter[1][1].speed=RegisterNumber;
 							            break;
-							case 0x1101://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1101://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][1].time=RegisterNumber;
 													break;
-							case 0x1102://åŠ é€Ÿåº¦
+							case 0x1102://¼ÓËÙ¶È
 													runparameter[1][1].acc=RegisterNumber;
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1103://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1103://×ªËÙ
 													runparameter[1][2].speed=RegisterNumber;
 													break;
-							case 0x1104://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1104://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][2].time=RegisterNumber;
 													break;
-							case 0x1105://åŠ é€Ÿåº¦
+							case 0x1105://¼ÓËÙ¶È
 													runparameter[1][2].acc=RegisterNumber;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1106://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1106://×ªËÙ
 													runparameter[1][3].speed=RegisterNumber;
 													break;
-							case 0x1107://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1107://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][3].time=RegisterNumber;
 													break;
-							case 0x1108://åŠ é€Ÿåº¦
+							case 0x1108://¼ÓËÙ¶È
 								          runparameter[1][3].acc=RegisterNumber;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1109://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1109://×ªËÙ
 													runparameter[1][4].speed=RegisterNumber;
 													break;
-							case 0x110A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x110A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[1][4].time=RegisterNumber;
 													break;
-							case 0x110B://åŠ é€Ÿåº¦
+							case 0x110B://¼ÓËÙ¶È
 													runparameter[1][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x110C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x110C://×ªËÙ
 //													runparameter[1][5].speed=RegisterNumber;
 //													break;
-//							case 0x110D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x110D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[1][5].time=RegisterNumber;
 //													break;
-//							case 0x110E://åŠ é€Ÿåº¦										 
+//							case 0x110E://¼ÓËÙ¶È										 
 //													runparameter[1][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //													break;
 							
-							//Bé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1200://è½¬é€Ÿ
+							//BÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1200://×ªËÙ
 													runparameter[2][1].speed=RegisterNumber;
 							            break;
-							case 0x1201://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1201://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][1].time=RegisterNumber;
 													break;
-							case 0x1202://åŠ é€Ÿåº¦
+							case 0x1202://¼ÓËÙ¶È
 													runparameter[2][1].acc=RegisterNumber;
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1203://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1203://×ªËÙ
 													runparameter[2][2].speed=RegisterNumber;
 													break;
-							case 0x1204://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1204://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][2].time=RegisterNumber;
 													break;
-							case 0x1205://åŠ é€Ÿåº¦
+							case 0x1205://¼ÓËÙ¶È
 													runparameter[2][2].acc=RegisterNumber;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1206://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1206://×ªËÙ
 													runparameter[2][3].speed=RegisterNumber;
 													break;
-							case 0x1207://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1207://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][3].time=RegisterNumber;
 													break;
-							case 0x1208://åŠ é€Ÿåº¦
+							case 0x1208://¼ÓËÙ¶È
 								          runparameter[2][3].acc=RegisterNumber;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1209://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1209://×ªËÙ
 													runparameter[2][4].speed=RegisterNumber;
 													break;
-							case 0x120A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x120A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[2][4].time=RegisterNumber;
 													break;
-							case 0x120B://åŠ é€Ÿåº¦
+							case 0x120B://¼ÓËÙ¶È
 													runparameter[2][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x120C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x120C://×ªËÙ
 //													runparameter[2][5].speed=RegisterNumber;
 //													break;
-//							case 0x120D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x120D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[2][5].time=RegisterNumber;
 //													break;
-//							case 0x120E://åŠ é€Ÿåº¦										 
+//							case 0x120E://¼ÓËÙ¶È										 
 //													runparameter[2][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //													break;
 							
-							//Cé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1300://è½¬é€Ÿ
+							//CÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1300://×ªËÙ
 													runparameter[3][1].speed=RegisterNumber;
 							            break;
-							case 0x1301://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1301://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][1].time=RegisterNumber;
 													break;
-							case 0x1302://åŠ é€Ÿåº¦
+							case 0x1302://¼ÓËÙ¶È
 													runparameter[3][1].acc=RegisterNumber;
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1303://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1303://×ªËÙ
 													runparameter[3][2].speed=RegisterNumber;
 													break;
-							case 0x1304://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1304://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][2].time=RegisterNumber;
 													break;
-							case 0x1305://åŠ é€Ÿåº¦
+							case 0x1305://¼ÓËÙ¶È
 													runparameter[3][2].acc=RegisterNumber;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1306://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1306://×ªËÙ
 													runparameter[3][3].speed=RegisterNumber;
 													break;
-							case 0x1307://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1307://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][3].time=RegisterNumber;
 													break;
-							case 0x1308://åŠ é€Ÿåº¦
+							case 0x1308://¼ÓËÙ¶È
 								          runparameter[3][3].acc=RegisterNumber;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1309://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1309://×ªËÙ
 													runparameter[3][4].speed=RegisterNumber;
 													break;
-							case 0x130A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x130A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[3][4].time=RegisterNumber;
 													break;
-							case 0x130B://åŠ é€Ÿåº¦
+							case 0x130B://¼ÓËÙ¶È
 													runparameter[3][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x130C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x130C://×ªËÙ
 //													runparameter[3][5].speed=RegisterNumber;
 //													break;
-//							case 0x130D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x130D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[3][5].time=RegisterNumber;
 //													break;
-//							case 0x130E://åŠ é€Ÿåº¦										 
+//							case 0x130E://¼ÓËÙ¶È										 
 //													runparameter[3][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //													break;
 							
-							//Dé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1400://è½¬é€Ÿ
+							//DÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1400://×ªËÙ
 													runparameter[4][1].speed=RegisterNumber;
 							            break;
-							case 0x1401://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1401://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][1].time=RegisterNumber;
 													break;
-							case 0x1402://åŠ é€Ÿåº¦
+							case 0x1402://¼ÓËÙ¶È
 													runparameter[4][1].acc=RegisterNumber;
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1403://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1403://×ªËÙ
 													runparameter[4][2].speed=RegisterNumber;
 													break;
-							case 0x1404://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1404://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][2].time=RegisterNumber;
 													break;
-							case 0x1405://åŠ é€Ÿåº¦
+							case 0x1405://¼ÓËÙ¶È
 													runparameter[4][2].acc=RegisterNumber;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1406://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1406://×ªËÙ
 													runparameter[4][3].speed=RegisterNumber;
 													break;
-							case 0x1407://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1407://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][3].time=RegisterNumber;
 													break;
-							case 0x1408://åŠ é€Ÿåº¦
+							case 0x1408://¼ÓËÙ¶È
 								          runparameter[4][3].acc=RegisterNumber;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1409://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1409://×ªËÙ
 													runparameter[4][4].speed=RegisterNumber;
 													break;
-							case 0x140A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x140A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[4][4].time=RegisterNumber;
 													break;
-							case 0x140B://åŠ é€Ÿåº¦
+							case 0x140B://¼ÓËÙ¶È
 													runparameter[4][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x140C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x140C://×ªËÙ
 //													runparameter[4][5].speed=RegisterNumber;
 //													break;
-//							case 0x140D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x140D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[4][5].time=RegisterNumber;
 //													break;
-//							case 0x140E://åŠ é€Ÿåº¦										 
+//							case 0x140E://¼ÓËÙ¶È										 
 //													runparameter[4][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //													break;
 							
-							//Eé…æ–¹:å…± 5æ­¥
-							//ç¬¬ä¸€æ­¥ï¼š
-							case 0x1500://è½¬é€Ÿ
+							//EÅä·½:¹² 5²½
+							//µÚÒ»²½£º
+							case 0x1500://×ªËÙ
 													runparameter[5][1].speed=RegisterNumber;
 							            break;
-							case 0x1501://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1501://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][1].time=RegisterNumber;
 													break;
-							case 0x1502://åŠ é€Ÿåº¦
+							case 0x1502://¼ÓËÙ¶È
 													runparameter[5][1].acc=RegisterNumber;
 								          break;
-							//ç¬¬äºŒæ­¥ï¼š
-							case 0x1503://è½¬é€Ÿ
+							//µÚ¶ş²½£º
+							case 0x1503://×ªËÙ
 													runparameter[5][2].speed=RegisterNumber;
 													break;
-							case 0x1504://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1504://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][2].time=RegisterNumber;
 													break;
-							case 0x1505://åŠ é€Ÿåº¦
+							case 0x1505://¼ÓËÙ¶È
 													runparameter[5][2].acc=RegisterNumber;
 													break;
-							//ç¬¬ä¸‰æ­¥ï¼š
-							case 0x1506://è½¬é€Ÿ
+							//µÚÈı²½£º
+							case 0x1506://×ªËÙ
 													runparameter[5][3].speed=RegisterNumber;
 													break;
-							case 0x1507://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x1507://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][3].time=RegisterNumber;
 													break;
-							case 0x1508://åŠ é€Ÿåº¦
+							case 0x1508://¼ÓËÙ¶È
 								          runparameter[5][3].acc=RegisterNumber;
 													break;
-							//ç¬¬å››æ­¥ï¼š
-							case 0x1509://è½¬é€Ÿ
+							//µÚËÄ²½£º
+							case 0x1509://×ªËÙ
 													runparameter[5][4].speed=RegisterNumber;
 													break;
-							case 0x150A://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+							case 0x150A://Ğı×ªÊ±³¤£¨Ãë£©
 													runparameter[5][4].time=RegisterNumber;
 													break;
-							case 0x150B://åŠ é€Ÿåº¦
+							case 0x150B://¼ÓËÙ¶È
 													runparameter[5][4].acc=RegisterNumber;
-													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 													break;
-//							//ç¬¬äº”æ­¥ï¼š
-//							case 0x150C://è½¬é€Ÿ
+//							//µÚÎå²½£º
+//							case 0x150C://×ªËÙ
 //													runparameter[5][5].speed=RegisterNumber;
 //													break;
-//							case 0x150D://æ—‹è½¬æ—¶é•¿ï¼ˆç§’ï¼‰
+//							case 0x150D://Ğı×ªÊ±³¤£¨Ãë£©
 //													runparameter[5][5].time=RegisterNumber;
 //													break;
-//							case 0x150E://åŠ é€Ÿåº¦										 
+//							case 0x150E://¼ÓËÙ¶È										 
 //													runparameter[5][5].acc=RegisterNumber;
-//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //ä»æ–°å†™å…¥flash
+//													RebuildParameter_lcd(runparameter,buflong,ParameterAddr1,ParameterAddr2) ;  //´ÓĞÂĞ´Èëflash
 //													break;							
 								
 							}
@@ -1771,26 +1771,26 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 						}
 						
 						memcpy(usart1_sendbuf,usart1_recebuf,6);
-						test=CalcCrc(usart1_sendbuf,6);    //è®¡ç®—æ ¡éªŒå€¼
+						test=CalcCrc(usart1_sendbuf,6);    //¼ÆËãĞ£ÑéÖµ
 						usart1_sendbuf[6]=test&0x00FF;
 						usart1_sendbuf[7]=test>>8;
 						
-						//å›å¤ä¸Šä½æœº
+						//»Ø¸´ÉÏÎ»»ú
 						USART1_SendBuf485(usart1_sendbuf,8);   //RS-485 
 				 } //0x10 end	
 
-			}//æœ¬æœºåœ°å€ç»“æŸ
+			}//±¾»úµØÖ·½áÊø
 			
-		//--------å¹¿æ’­åœ°å€-----------------
+		//--------¹ã²¥µØÖ·-----------------
 	  else
 		 {
-			usart1_recebuf[0]=0x00;         //åŠ å…¥å¹¿æ’­åœ°å€ä¸€åŒæ ¡éªŒ 
-			test=CalcCrc(usart1_recebuf,(wordsize1_rece-2));    //è®¡ç®—æ ¡éªŒå€¼ 
+			usart1_recebuf[0]=0x00;         //¼ÓÈë¹ã²¥µØÖ·Ò»Í¬Ğ£Ñé 
+			test=CalcCrc(usart1_recebuf,(wordsize1_rece-2));    //¼ÆËãĞ£ÑéÖµ 
 			if((usart1_recebuf[wordsize1_rece-2]+usart1_recebuf[wordsize1_rece-1]*256)==test) 
 		  {
-			 	memcpy(&ModbusRtu_order,usart1_recebuf,wordsize1_rece);   //å°†ä¸²å£1æ”¶åˆ°çš„æ•°æ®è£…å…¥è§£æç»“æ„ä½“
-				StartAddress=ModbusRtu_order.StartAddressH*256+ModbusRtu_order.StartAddressL;		      //åˆå¹¶å¼€å§‹åœ°å€	
-				RegisterNumber=ModbusRtu_order.RegisterNumberH*256+ModbusRtu_order.RegisterNumberL;   //åˆå¹¶ï¼ˆå¯„å­˜å™¨æ•°é‡/å†™å…¥å‚æ•°ï¼‰
+			 	memcpy(&ModbusRtu_order,usart1_recebuf,wordsize1_rece);   //½«´®¿Ú1ÊÕµ½µÄÊı¾İ×°Èë½âÎö½á¹¹Ìå
+				StartAddress=ModbusRtu_order.StartAddressH*256+ModbusRtu_order.StartAddressL;		      //ºÏ²¢¿ªÊ¼µØÖ·	
+				RegisterNumber=ModbusRtu_order.RegisterNumberH*256+ModbusRtu_order.RegisterNumberL;   //ºÏ²¢£¨¼Ä´æÆ÷ÊıÁ¿/Ğ´Èë²ÎÊı£©
 				if(ModbusRtu_order.FunctionCode==0x03)
 				{
 					char i,n;
@@ -1800,10 +1800,10 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 					n=2;
 					for(i=0;i<RegisterNumber;i++)
 					{
-					 switch (StartAddress)         //å¾ªç¯æ·»åŠ å¯„å­˜å™¨æ•°æ®
+					 switch (StartAddress)         //Ñ­»·Ìí¼Ó¼Ä´æÆ÷Êı¾İ
 					 {
 						 
-						 case 0x0000:usart1_sendbuf[n+1]=DeviceAddress>>8;        //è®¾å¤‡åœ°å€
+						 case 0x0000:usart1_sendbuf[n+1]=DeviceAddress>>8;        //Éè±¸µØÖ·
 												 usart1_sendbuf[n+2]=DeviceAddress&0x00FF;
 											   break;	
 
@@ -1828,11 +1828,11 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 					 StartAddress++;
 					 n=n+2;
 				  }
-					test=CalcCrc(usart1_sendbuf,n+1);    //è®¡ç®—æ ¡éªŒå€¼
+					test=CalcCrc(usart1_sendbuf,n+1);    //¼ÆËãĞ£ÑéÖµ
 					usart1_sendbuf[n+1]=test&0x00FF;
 					usart1_sendbuf[n+2]=test>>8;
 					
-					//å›å¤ä¸Šä½æœº
+					//»Ø¸´ÉÏÎ»»ú
 			    USART1_SendBuf485(usart1_sendbuf,n+3);   //RS-485  
 
 				 }
@@ -1841,77 +1841,77 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 				{
 					switch (StartAddress)
 					{
-						case 0x0000:    //æ›´æ”¹æœ¬æœºåœ°å€
+						case 0x0000:    //¸ü¸Ä±¾»úµØÖ·
 							          if(RegisterNumber<255&&RegisterNumber>0)
 												{	
 							            DeviceParameter.Addr=RegisterNumber;
 						              DeviceAddress=RegisterNumber;
-											    //å›åº”ä¸Šä½æœº
+											    //»ØÓ¦ÉÏÎ»»ú
 						              memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
 			                    USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
-						              //ä»æ–°å†™å…¥flash
+						              //´ÓĞÂĞ´Èëflash
 													if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-                          RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash 
+                          RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash 
 												}
 						            break;
 						
-						case 0x0001:   //æ›´æ”¹ä¸²å£æ³¢ç‰¹ç‡
+						case 0x0001:   //¸ü¸Ä´®¿Ú²¨ÌØÂÊ
 							          if(1==RegisterNumber) DeviceParameter.Bound1=9600;
 							          else if(2==RegisterNumber) DeviceParameter.Bound1=19200;
 						            else if(3==RegisterNumber) DeviceParameter.Bound1=38400;
 						            else if(4==RegisterNumber) DeviceParameter.Bound1=115200;
 						            else break;
 						            usartbound1=DeviceParameter.Bound1;
-											  //å›åº”ä¸Šä½æœº
+											  //»ØÓ¦ÉÏÎ»»ú
 						            memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
                         USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
-									      //ä»æ–°å†™å…¥flash
+									      //´ÓĞÂĞ´Èëflash
 												if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-                        RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash
-								        uart_init(usartbound1);	 //ä¸²å£åˆå§‹åŒ–
+                        RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash
+								        uart_init(usartbound1);	 //´®¿Ú³õÊ¼»¯
 						            break;
 						
-						case 0x0002:   //æ›´æ”¹ä¸²å£æ³¢ç‰¹ç‡
+						case 0x0002:   //¸ü¸Ä´®¿Ú²¨ÌØÂÊ
 							          if(1==RegisterNumber) DeviceParameter.Bound2=9600;
 							          else if(2==RegisterNumber) DeviceParameter.Bound2=19200;
 						            else if(3==RegisterNumber) DeviceParameter.Bound2=38400;
 						            else if(4==RegisterNumber) DeviceParameter.Bound2=115200;
 						            else break;
 						            usartbound2=DeviceParameter.Bound2;
-											  //å›åº”ä¸Šä½æœº
+											  //»ØÓ¦ÉÏÎ»»ú
 						            memcpy(usart1_sendbuf,&ModbusRtu_order,wordsize1_rece); 
                         USART1_SendBuf485(usart1_sendbuf,wordsize1_rece);                 //RS-485
-									      //ä»æ–°å†™å…¥flash
+									      //´ÓĞÂĞ´Èëflash
 						            if(DeviceParameter.Addr>0&&DeviceParameter.Bound1>0&&DeviceParameter.Bound2>0)
-                        RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //ä»æ–°å†™å…¥flash
-								        uart2_init(usartbound2);	 //ä¸²å£åˆå§‹åŒ–
+                        RebuildParameter(DeviceParameter,ParameterAddr3,ParameterAddr4);  //´ÓĞÂĞ´Èëflash
+								        uart2_init(usartbound2);	 //´®¿Ú³õÊ¼»¯
 						            break;
 						
 					  default: break;
 					}
 				}	
-       clean_usart1();  //æ¸…ç†ä¸²å£1çš„çŠ¶æ€ 
+       clean_usart1();  //ÇåÀí´®¿Ú1µÄ×´Ì¬ 
        memset(usart1_sendbuf,0,100);	
 		  }
-		 }//å¹¿æ’­åœ°å€ç»“æŸ
+		 }//¹ã²¥µØÖ·½áÊø
 			
-			clean_usart1();  //æ¸…ç†ä¸²å£1çš„çŠ¶æ€ 
+			clean_usart1();  //ÇåÀí´®¿Ú1µÄ×´Ì¬ 
 		 
-    }				//ä¸²å£1ç»“æŸ	
+    }				//´®¿Ú1½áÊø	
 
 			
 			
-		//æ ¡éªŒä¸²å£2æ”¶åˆ°çš„ *MODBUS-RTUå‘½ä»¤æ ¼å¼* çš„æ•°æ®
+		//Ğ£Ñé´®¿Ú2ÊÕµ½µÄ *MODBUS-RTUÃüÁî¸ñÊ½* µÄÊı¾İ
 		if((usart2check==stop)&&(usart2_rec==succeed))
 		{
 			//char c;
 			s16  temphz;
 			usart2check=start; 
-      usart2check=stop;                        //ä¸²å£2æ¥æ”¶æ•°æ®æ ¡éªŒ
-			buf2mumber=0;                            //ä¸²å£2æ¥æ”¶bufæ•°ç»„è®¡
-			usart2_rec=stop;                         //ä¸²å£2æ¥æ”¶çŠ¶æ€
-			usart2_recebuf[0]=usart2_sendbuf[0];                     //ä¸‹è¡Œè®¾å¤‡åœ°å€å›ºå®š1
-			test=CalcCrc(usart2_recebuf,(wordsize2_rece-2));    //è®¡ç®—æ ¡éªŒå€¼
+      usart2check=stop;                        //´®¿Ú2½ÓÊÕÊı¾İĞ£Ñé
+			buf2mumber=0;                            //´®¿Ú2½ÓÊÕbufÊı×é¼Æ
+			usart2_rec=stop;                         //´®¿Ú2½ÓÊÕ×´Ì¬
+			usart2_recebuf[0]=usart2_sendbuf[0];                     //ÏÂĞĞÉè±¸µØÖ·¹Ì¶¨1
+			test=CalcCrc(usart2_recebuf,(wordsize2_rece-2));    //¼ÆËãĞ£ÑéÖµ
 
 			if(test==usart2_recebuf[wordsize2_rece-2]+usart2_recebuf[wordsize2_rece-1]*256)
 			{
@@ -1921,9 +1921,9 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 					case 0x03:
 										
 					readmotorflag=true;
-					if(set_flag==false&&modeNo!=0)   //è®¾ç½®ä¸­æ ‡å¿—
+					if(set_flag==false&&modeNo!=0)   //ÉèÖÃÖĞ±êÖ¾
 					{
-						//æ±‚å¹³å‡é€Ÿåº¦
+						//ÇóÆ½¾ùËÙ¶È
 			//			speed_s=usart2_recebuf[5]*256+usart2_recebuf[6]+speed_s;
 			//			speed_n++;
 			//			if(speed_n==4)
@@ -1931,43 +1931,43 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 			//				PVspeed=speed_s/4;
 			//				speed_n=0; speed_s=0;
 			//			}
-						temphz=usart2_recebuf[3]*256+usart2_recebuf[4];  //æ¢å‘é¢‘ç‡
+						temphz=usart2_recebuf[3]*256+usart2_recebuf[4];  //»»ÏòÆµÂÊ
 						if(temphz<0)   PVspeed=0;
 						else           PVspeed=temphz*2/4;      //temphz*0.1*20/4
 						
-						if(plansteplong==8)           //ç¬¬äºŒæ¬¡åŠ é€Ÿ
+						if(plansteplong==8)           //µÚ¶ş´Î¼ÓËÙ
 						{
 							if(PVspeed>SVspeed*0.3)
 							{
 								delay_ms(50);
 								plansteplong=7;
 								planstep=7;
-								memcpy(usart2_sendbuf,plan[planstep],8);   //å°†æ•°æ®ç›´æ¥è£…å…¥ä¸²å£1çš„å‘é€
+								memcpy(usart2_sendbuf,plan[planstep],8);   //½«Êı¾İÖ±½Ó×°Èë´®¿Ú1µÄ·¢ËÍ
 								USART2_SendBuf485(usart2_sendbuf,8);       //Rs-485
-								usart2_rec=start;                      //å¯åŠ¨Usart2
+								usart2_rec=start;                      //Æô¶¯Usart2
 								Usart2_overtime=RECEovertime2;
-								readmotorflag=false;                   //æš‚åœå‘¨æœŸè¯»motoræ“ä½œ
+								readmotorflag=false;                   //ÔİÍ£ÖÜÆÚ¶Ámotor²Ù×÷
 								readmotortime=READMOTORTIME;
 							}
 						}
 						else
 						{
-							if(PVspeed>SVspeed*0.7)    //å¼€å§‹è®¡æ•°
+							if(PVspeed>SVspeed*0.7)    //¿ªÊ¼¼ÆÊı
 							{
 								if(PVspeed<SVspeed*1.2) PVtime_flag=true;
 								else                    PVtime_flag=false;
-								if(modeNo==1&&play_flag==1&&runstep1==3&&PVspeed<SVspeed*1.1)  //æ¨¡å¼ä¸€æ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ “å‘½ä»¤  2ï¼šå¼€æ “å»¶æ—¶2ç§’   3ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    4ï¼šç­‰å¾…é€Ÿåº¦è¾¾æ ‡   5ï¼šå‘æŒ‚æ “å‘½ä»¤   6ï¼šç­‰å¾…é™é€Ÿ   7ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº
+								if(modeNo==1&&play_flag==1&&runstep1==3&&PVspeed<SVspeed*1.1)  //Ä£Ê½Ò»²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªË¨ÃüÁî  2£º¿ªË¨ÑÓÊ±2Ãë   3£º·¢ËÍÆô¶¯µç»úÃüÁî    4£ºµÈ´ıËÙ¶È´ï±ê   5£º·¢¹ÒË¨ÃüÁî   6£ºµÈ´ı½µËÙ   7£ºÇåÔËĞĞÊ±¼äÍ£»ú
 								{
 									runstep1=5;
 									neworder=true;
 								}
-								else if(modeNo==2&&play_flag==1&&step==5&&runstep2==5&&PVspeed<SVspeed*1.1) //æ¨¡å¼äºŒæ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ°”æ³µå‘½ä»¤  2ï¼šå¼€æ°”æ³µå»¶æ—¶3ç§’   3ï¼šå‘å¼€æ “å‘½ä»¤  4ï¼šå¼€æ “å»¶æ—¶2ç§’   5ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    6ï¼šstep5ç­‰å¾…é€Ÿåº¦è¾¾æ ‡   7ï¼šå‘æŒ‚æ “å‘½ä»¤   8ï¼šç­‰å¾…é™é€Ÿ   9ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº  10ï¼šå‘å…³æ°”æ³µå‘½ä»¤
+								else if(modeNo==2&&play_flag==1&&step==5&&runstep2==5&&PVspeed<SVspeed*1.1) //Ä£Ê½¶ş²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªÆø±ÃÃüÁî  2£º¿ªÆø±ÃÑÓÊ±3Ãë   3£º·¢¿ªË¨ÃüÁî  4£º¿ªË¨ÑÓÊ±2Ãë   5£º·¢ËÍÆô¶¯µç»úÃüÁî    6£ºstep5µÈ´ıËÙ¶È´ï±ê   7£º·¢¹ÒË¨ÃüÁî   8£ºµÈ´ı½µËÙ   9£ºÇåÔËĞĞÊ±¼äÍ£»ú  10£º·¢¹ØÆø±ÃÃüÁî
 								{
 									runstep2=7;
 									neworder=true;
 								}
 							}
-							else if(PVspeed==0&&play_flag==1&&bolt_speedtime==0)  //åˆ¤æ–­æ “å¡
+							else if(PVspeed==0&&play_flag==1&&bolt_speedtime==0)  //ÅĞ¶ÏË¨Èû
 							{
 								if(modeNo==1&&runstep1==6)  //if(modeNo==1&&runstep1==5)
 								{
@@ -1981,20 +1981,20 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 									neworder=true;
 								}
 							}
-							else if(PVspeed<2&&play_flag==2)  //åˆ¤æ–­åœè½¦
+							else if(PVspeed<2&&play_flag==2)  //ÅĞ¶ÏÍ£³µ
 							{
-								if(modeNo==1) //0ï¼šç³»ç»Ÿå‚æ•° 1ï¼šå•æ­¥  2ï¼šå¤šæ­¥ 3.æŠ¥é”™
+								if(modeNo==1) //0£ºÏµÍ³²ÎÊı 1£ºµ¥²½  2£º¶à²½ 3.±¨´í
 								{
 									play_flag=0;
 									PVtime_flag=false;
 									startwork=0;
-									if(runstep1==6) process=4;  //æ–°å¢åˆ¤æ–­é”€å­æœªé”å®š
+									if(runstep1==6) process=4;  //ĞÂÔöÅĞ¶ÏÏú×ÓÎ´Ëø¶¨
 									runstep1=0;
 									process++;
 								}
 								else if(modeNo==2)
 								{
-									if(runstep2==8) process=4;  //æ–°å¢åˆ¤æ–­é”€å­æœªé”å®š
+									if(runstep2==8) process=4;  //ĞÂÔöÅĞ¶ÏÏú×ÓÎ´Ëø¶¨
 									runstep2=10;
 									neworder=true;
 									play_flag=0;
@@ -2010,9 +2010,9 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 											readmotortime=READMOTORTIME;
 										break;
 										 
-					case 0x05:if(memcmp(usart2_recebuf,usart2_sendbuf,wordsize2_rece)==0)  //æ¯”è¾ƒå†…å­˜
+					case 0x05:if(memcmp(usart2_recebuf,usart2_sendbuf,wordsize2_rece)==0)  //±È½ÏÄÚ´æ
 										{
-											if(modeNo==1) //if(modeNo==1&&runstep1==1)æ¨¡å¼ä¸€æ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ “å‘½ä»¤  2ï¼šå¼€æ “å»¶æ—¶2ç§’   3ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    4ï¼šç­‰å¾…é€Ÿåº¦è¾¾æ ‡   5ï¼šå‘æŒ‚æ “å‘½ä»¤   6ï¼šç­‰å¾…é™é€Ÿ   7ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº
+											if(modeNo==1) //if(modeNo==1&&runstep1==1)Ä£Ê½Ò»²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªË¨ÃüÁî  2£º¿ªË¨ÑÓÊ±2Ãë   3£º·¢ËÍÆô¶¯µç»úÃüÁî    4£ºµÈ´ıËÙ¶È´ï±ê   5£º·¢¹ÒË¨ÃüÁî   6£ºµÈ´ı½µËÙ   7£ºÇåÔËĞĞÊ±¼äÍ£»ú
 											{
 												if(runstep1==1)
 												{
@@ -2021,7 +2021,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 												}
 												else if(runstep1==5) runstep1=6;
 											}
-											if(modeNo==2) //æ¨¡å¼äºŒæ­¥éª¤ 0ï¼šæœªå¯åŠ¨  1ï¼šå‘å¼€æ°”æ³µå‘½ä»¤  2ï¼šå¼€æ°”æ³µå»¶æ—¶3ç§’   3ï¼šå‘å¼€æ “å‘½ä»¤  4ï¼šå¼€æ “å»¶æ—¶2ç§’   5ï¼šå‘é€å¯åŠ¨ç”µæœºå‘½ä»¤    6ï¼šstep5ç­‰å¾…é€Ÿåº¦è¾¾æ ‡   7ï¼šå‘æŒ‚æ “å‘½ä»¤   8ï¼šç­‰å¾…é™é€Ÿ   9ï¼šæ¸…è¿è¡Œæ—¶é—´åœæœº  10ï¼šå‘å…³æ°”æ³µå‘½ä»¤
+											if(modeNo==2) //Ä£Ê½¶ş²½Öè 0£ºÎ´Æô¶¯  1£º·¢¿ªÆø±ÃÃüÁî  2£º¿ªÆø±ÃÑÓÊ±3Ãë   3£º·¢¿ªË¨ÃüÁî  4£º¿ªË¨ÑÓÊ±2Ãë   5£º·¢ËÍÆô¶¯µç»úÃüÁî    6£ºstep5µÈ´ıËÙ¶È´ï±ê   7£º·¢¹ÒË¨ÃüÁî   8£ºµÈ´ı½µËÙ   9£ºÇåÔËĞĞÊ±¼äÍ£»ú  10£º·¢¹ØÆø±ÃÃüÁî
 											{
 												if(runstep2==1)
 												{
@@ -2051,19 +2051,19 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 										break;
 					
 					case 0x06:
-										if(memcmp(usart2_recebuf,usart2_sendbuf,wordsize2_rece)==0)  //æ¯”è¾ƒå†…å­˜
+										if(memcmp(usart2_recebuf,usart2_sendbuf,wordsize2_rece)==0)  //±È½ÏÄÚ´æ
 										{
-											//å‘é€ä¸‹ä¸€ç»„å‚æ•°
+											//·¢ËÍÏÂÒ»×é²ÎÊı
 											if(planstep<6)
 											{
 												if(planstep==5) delay_ms(150);
 												else            delay_ms(50);
 												planstep++;
-												memcpy(usart2_sendbuf,plan[planstep],8);   //å°†æ•°æ®ç›´æ¥è£…å…¥ä¸²å£1çš„å‘é€
+												memcpy(usart2_sendbuf,plan[planstep],8);   //½«Êı¾İÖ±½Ó×°Èë´®¿Ú1µÄ·¢ËÍ
 												USART2_SendBuf485(usart2_sendbuf,8);       //Rs-485
-												usart2_rec=start;                      //å¯åŠ¨Usart2
+												usart2_rec=start;                      //Æô¶¯Usart2
 												Usart2_overtime=RECEovertime2;
-												readmotorflag=false;                   //æš‚åœå‘¨æœŸè¯»motoræ“ä½œ
+												readmotorflag=false;                   //ÔİÍ£ÖÜÆÚ¶Ámotor²Ù×÷
 												memset(usart2_recebuf,0,wordsize2_rece);
 											}
 											else if(planstep==6||planstep==7)
@@ -2076,14 +2076,14 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 											
 										break;
 				}
-			}else  //æ ¡éªŒå¤±è´¥
+			}else  //Ğ£ÑéÊ§°Ü
 					{
-						memset(usart2_recebuf,0,wordsize2_rece); //å°šæœªéªŒè¯
+						memset(usart2_recebuf,0,wordsize2_rece); //ÉĞÎ´ÑéÖ¤
 						buf2mumber=0;
 						Usart2_overtime=RECEovertime2; 
 						
-						usart2_rec=start;         //æ ¡éªŒå¤±è´¥ï¼Œå¯åŠ¨Usart2è¶…æ—¶è®¡æ—¶
-						if(usart2_sendbuf[1]==3)  //æ ¡éªŒå¤±è´¥  å¦‚æœæ˜¯è¯»æ“ä½œï¼Œå»¶æ—¶å†è¯»
+						usart2_rec=start;         //Ğ£ÑéÊ§°Ü£¬Æô¶¯Usart2³¬Ê±¼ÆÊ±
+						if(usart2_sendbuf[1]==3)  //Ğ£ÑéÊ§°Ü  Èç¹ûÊÇ¶Á²Ù×÷£¬ÑÓÊ±ÔÙ¶Á
 						{
 							erro_count++;
 							readmotorflag=true;
@@ -2093,17 +2093,17 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 		}	
 
 
-		//ä¸²å£1æ¥æ”¶è¶…æ—¶
+		//´®¿Ú1½ÓÊÕ³¬Ê±
 		if(Usart1_overtime==0)
 		{
 			memset(usart1_recebuf,0,wordsize1_rece);
 			buf1mumber=0;
 			Usart1_overtime=RECEovertime1; 
-//			usart1_rec=fail;             //æ­£å¼ç‰ˆè¦åŠ å…¥è¶…æ—¶å¤„ç†
+//			usart1_rec=fail;             //ÕıÊ½°æÒª¼ÓÈë³¬Ê±´¦Àí
 			usart1_rec=stop; 	
 		}
 		
-			//ä¸²å£2æ¥æ”¶è¶…æ—¶
+			//´®¿Ú2½ÓÊÕ³¬Ê±
 		if(Usart2_overtime==0)
 		{
 			erro_count++;
@@ -2114,7 +2114,7 @@ void RebuildParameter(struct DEVICEPARAMETER DP,u32 addr1,u32 addr2)
 			if(erro_count<4)
 			{
         USART2_SendBuf485(usart2_sendbuf,8);       //Rs-485
-				usart2_rec=start;                          //å¯åŠ¨Usart2				
+				usart2_rec=start;                          //Æô¶¯Usart2				
 		  }
 			else
 			{
