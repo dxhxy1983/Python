@@ -2,130 +2,257 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>抢答器 - 选手终端</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f5f5f5; padding: 20px; height: 100vh; display: flex; flex-direction: column; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column; }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 20px; font-size: 24px; }
-        .name-setting { margin-bottom: 25px; text-align: center; }
-        #name-input { padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px; width: 70%; margin-right: 10px; }
-        #set-name-btn { padding: 12px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .feedback { height: 20px; line-height: 20px; font-size: 14px; color: #27ae60; margin-top: 8px; text-align: center; }
-        .error-feedback { color: #e74c3c; }
-        .status { margin: 20px 0; padding: 15px; border-radius: 5px; font-size: 18px; text-align: center; font-weight: bold; }
-        .waiting { background: #e3f2fd; color: #1976d2; }
-        .ready { background: #e8f5e9; color: #27ae60; }
-        .winner { background: #fce4ec; color: #c2185b; }
-        .loser { background: #f5f5f5; color: #7f8c8d; }
-        .answer-btn { flex: 1; margin-top: 20px; padding: 40px; font-size: 28px; background: #e74c3c; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
-        .answer-btn:disabled { background: #bdc3c7; cursor: not-allowed; box-shadow: none; }
-        .connected-clients { margin-top: 20px; font-size: 14px; color: #7f8c8d; text-align: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif; }
+        body { background: #f0f2f5; padding: 20px; height: 100vh; display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; }
+        .container { max-width: 100%; width: 100%; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); flex: 1; display: flex; flex-direction: column; }
+        h1 { color: #1a202c; text-align: center; margin-bottom: 25px; font-size: 28px; font-weight: bold; }
+        
+        /* 名称设置区域 */
+        .name-setting { margin-bottom: 30px; text-align: center; width: 100%; }
+        #name-input { padding: 15px; font-size: 18px; border: 2px solid #e8f4f8; border-radius: 8px; width: 70%; margin-right: 10px; outline: none; max-width: 300px; }
+        /* 错误状态下的输入框样式 */
+        #name-input.error { border-color: #f5222d; }
+        #name-input:focus { border-color: #1890ff; }
+        #set-name-btn { padding: 15px 25px; background: #1890ff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; }
+        /* 反馈提示样式（区分普通错误和重名错误） */
+        .feedback { height: 24px; line-height: 24px; font-size: 16px; margin-top: 10px; text-align: center; }
+        .success-feedback { color: #52c41a; }
+        .error-feedback { color: #f5222d; font-weight: bold; }
+        .duplicate-feedback { color: #f5222d; font-weight: bold; background: #fff1f0; padding: 5px; border-radius: 4px; margin: 10px auto; width: 80%; }
+        
+        /* 状态提示区域 */
+        .status-card { margin: 20px 0; padding: 20px; border-radius: 10px; font-size: 20px; text-align: center; font-weight: bold; min-height: 100px; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .waiting { background: #e6f7ff; color: #1890ff; }
+        .ready { background: #f6ffed; color: #52c41a; }
+        .you-win { background: #fff1f0; color: #f5222d; }
+        .others-win { background: #f5f5f5; color: #1a202c; }
+        
+        /* 抢答按钮（全屏宽度+超大尺寸） */
+        .answer-btn { 
+            width: 100%; 
+            flex: 1; 
+            margin-top: 25px; 
+            padding: 80px 0; 
+            font-size: 40px; 
+            background: #f5222d; 
+            color: white; 
+            border: none; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            box-shadow: 0 8px 20px rgba(245, 34, 45, 0.3); 
+            transition: all 0.2s ease; 
+            min-height: 250px; 
+            max-width: none; 
+        }
+        .answer-btn:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(245, 34, 45, 0.4); }
+        .answer-btn:disabled { background: #d9d9d9; color: #8c8c8c; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        /* 连接状态区域 */
+        .connected-info { margin-top: 20px; font-size: 16px; color: #666; text-align: center; width: 100%; }
+        .result-detail { font-size: 18px; margin-top: 8px; color: #1890ff; font-weight: bold; }
+        
+        /* 加载提示 */
+        .loading { text-align: center; font-size: 20px; color: #1890ff; padding: 30px; width: 100%; }
+        .error-page { text-align: center; padding: 30px; color: #f5222d; font-size: 18px; width: 100%; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>抢答器 - 选手终端</h1>
+    <div class="container" id="main-container">
+        <!-- 加载提示 -->
+        <div class="loading" id="loading">正在连接抢答系统...</div>
         
-        <div class="name-setting">
-            <input type="text" id="name-input" placeholder="输入你的名称（最多10字）">
-            <button id="set-name-btn" onclick="setName()">确认</button>
-            <div class="feedback" id="name-feedback"></div>
+        <!-- 主内容（初始隐藏） -->
+        <div id="main-content" style="display: none;">
+            <h1>抢答器 - 选手终端</h1>
+            
+            <div class="name-setting">
+                <input type="text" id="name-input" placeholder="输入你的名称（最多10字）">
+                <button id="set-name-btn" onclick="setName()">确认</button>
+                <!-- 反馈提示区域 -->
+                <div class="feedback" id="name-feedback"></div>
+            </div>
+            
+            <div class="status-card waiting" id="status">
+                等待主持人开始抢答...
+            </div>
+            
+            <button class="answer-btn" id="answer-btn" onclick="answer()" disabled>抢答</button>
+            
+            <div class="connected-info">
+                已连接终端：<span id="client-count">0</span> 个
+                <div class="result-detail" id="result-detail"></div>
+            </div>
         </div>
         
-        <div class="status waiting" id="status">
-            等待主持人开始抢答...
-        </div>
-        
-        <button class="answer-btn" id="answer-btn" onclick="answer()" disabled>抢答</button>
-        
-        <div class="connected-clients">
-            已连接终端：<span id="client-count">0</span> 个
+        <!-- 错误提示（初始隐藏） -->
+        <div class="error-page" id="error-page" style="display: none;">
+            <p>⚠️ 连接抢答系统失败</p>
+            <p style="margin-top: 15px;">请检查：</p>
+            <p>1. 手机与电脑是否在同一局域网</p>
+            <p>2. 服务端程序是否正常运行</p>
+            <p>3. 网址是否输入正确</p>
+            <button style="margin-top: 20px; padding: 10px 20px; font-size: 16px;" onclick="window.location.reload()">刷新页面</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
-        const socket = io();
+        // 动态加载SocketIO
+        function loadScript(url, callback) {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = callback;
+            script.onerror = function() {
+                loadScript('https://cdn.socket.io/4.7.2/socket.io.min.js', callback);
+            };
+            document.head.appendChild(script);
+        }
+
+        // 页面加载逻辑
+        let socket;
+        let clientId = '';
+        const mainContainer = document.getElementById('main-container');
+        const loadingEl = document.getElementById('loading');
+        const mainContent = document.getElementById('main-content');
+        const errorPage = document.getElementById('error-page');
         const statusEl = document.getElementById('status');
         const answerBtn = document.getElementById('answer-btn');
         const clientCountEl = document.getElementById('client-count');
         const nameInput = document.getElementById('name-input');
         const nameFeedback = document.getElementById('name-feedback');
-        let clientId = '';
-        
-        // 初始化客户端信息
-        socket.on('init_client', (data) => {
-            clientId = data.client_id;
-            nameInput.value = data.default_name;
-        });
-        
-        // 设置名称
-        function setName() {
-            const newName = nameInput.value.trim();
-            if (newName && newName.length <= 10) {
-                socket.emit('set_name', { name: newName });
-                // 清空之前的反馈
-                nameFeedback.textContent = '';
-                nameFeedback.className = 'feedback';
-            } else {
-                nameFeedback.textContent = '名称不能为空且长度不能超过10字！';
-                nameFeedback.className = 'feedback error-feedback';
+        const resultDetail = document.getElementById('result-detail');
+
+        // 加载SocketIO并初始化
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js', function() {
+            try {
+                socket = io({
+                    transports: ['websocket'],
+                    timeout: 5000,
+                    reconnection: true
+                });
+
+                // 连接成功
+                socket.on('connect', function() {
+                    loadingEl.style.display = 'none';
+                    mainContent.style.display = 'block';
+                });
+
+                // 连接失败
+                socket.on('connect_error', function() {
+                    loadingEl.style.display = 'none';
+                    errorPage.style.display = 'block';
+                });
+
+                // 初始化客户端信息
+                socket.on('init_client', (data) => {
+                    clientId = data.client_id;
+                    nameInput.value = data.default_name;
+                });
+
+                // 设置名称
+                window.setName = function() {
+                    // 清空之前的提示和输入框错误样式
+                    nameFeedback.textContent = '';
+                    nameFeedback.className = 'feedback';
+                    nameInput.classList.remove('error');
+                    
+                    const newName = nameInput.value.trim();
+                    if (newName && newName.length <= 10) {
+                        socket.emit('set_name', { name: newName });
+                    } else {
+                        // 本地提示：名称为空或过长
+                        nameFeedback.textContent = '名称不能为空且长度不能超过10字！';
+                        nameFeedback.className = 'feedback error-feedback';
+                        nameInput.classList.add('error');
+                    }
+                };
+
+                // 名称修改成功反馈
+                socket.on('name_set_success', (data) => {
+                    nameFeedback.textContent = data.message;
+                    nameFeedback.className = 'feedback success-feedback';
+                    nameInput.classList.remove('error');
+                    // 2秒后清空提示
+                    setTimeout(() => {
+                        nameFeedback.textContent = '';
+                        nameFeedback.className = 'feedback';
+                    }, 2000);
+                });
+
+                // 名称修改失败反馈（包含重名提示）
+                socket.on('name_set_failed', (data) => {
+                    nameInput.classList.add('error'); // 输入框变红
+                    // 判断是否是重名提示
+                    if (data.message.includes('已被占用')) {
+                        // 重名提示：特殊样式（红底白字+圆角）
+                        nameFeedback.textContent = data.message;
+                        nameFeedback.className = 'feedback duplicate-feedback';
+                    } else {
+                        // 普通错误提示
+                        nameFeedback.textContent = data.message;
+                        nameFeedback.className = 'feedback error-feedback';
+                    }
+                    // 5秒后自动清空重名提示（普通错误2秒）
+                    const timeout = data.message.includes('已被占用') ? 5000 : 2000;
+                    setTimeout(() => {
+                        nameFeedback.textContent = '';
+                        nameFeedback.className = 'feedback';
+                        nameInput.classList.remove('error');
+                    }, timeout);
+                });
+
+                // 抢答
+                window.answer = function() {
+                    socket.emit('answer');
+                    answerBtn.disabled = true;
+                };
+
+                // 接收客户端连接更新
+                socket.on('update_clients', (data) => {
+                    clientCountEl.textContent = data.count;
+                });
+
+                // 接收抢答开始通知
+                socket.on('game_started', () => {
+                    statusEl.className = 'status-card ready';
+                    statusEl.textContent = '抢答开始！快速点击抢答按钮！';
+                    answerBtn.disabled = false;
+                    resultDetail.textContent = '';
+                });
+
+                // 接收抢答结果
+                socket.on('answer_result', (winner) => {
+                    if (winner.client_id === clientId) {
+                        statusEl.className = 'status-card you-win';
+                        statusEl.textContent = '🎉 恭喜你！抢答成功！';
+                    } else {
+                        statusEl.className = 'status-card others-win';
+                        statusEl.textContent = '❌ 抢答失败';
+                    }
+                    resultDetail.textContent = `获胜者：${winner.name} | 响应时间：${winner.response_time}ms`;
+                    answerBtn.disabled = true;
+                });
+
+                // 接收抢答重置通知
+                socket.on('game_reset', () => {
+                    statusEl.className = 'status-card waiting';
+                    statusEl.textContent = '等待主持人开始抢答...';
+                    answerBtn.disabled = true;
+                    resultDetail.textContent = '';
+                });
+
+            } catch (e) {
+                loadingEl.style.display = 'none';
+                errorPage.style.display = 'block';
+                console.error('初始化失败：', e);
             }
-        }
-        
-        // 名称修改成功反馈
-        socket.on('name_set_success', (data) => {
-            nameFeedback.textContent = data.message;
-            nameFeedback.className = 'feedback';
-            // 2秒后清空反馈
-            setTimeout(() => {
-                nameFeedback.textContent = '';
-            }, 2000);
-        });
-        
-        // 名称修改失败反馈
-        socket.on('name_set_failed', (data) => {
-            nameFeedback.textContent = data.message;
-            nameFeedback.className = 'feedback error-feedback';
-        });
-        
-        // 抢答
-        function answer() {
-            socket.emit('answer');
-            answerBtn.disabled = true;
-        }
-        
-        // 接收客户端连接更新
-        socket.on('update_clients', (data) => {
-            clientCountEl.textContent = data.count;
-        });
-        
-        // 接收抢答开始通知
-        socket.on('game_started', () => {
-            statusEl.className = 'status ready';
-            statusEl.textContent = '抢答开始！快速点击抢答按钮！';
-            answerBtn.disabled = false;
-        });
-        
-        // 接收抢答结果
-        socket.on('answer_result', (winner) => {
-            if (winner.client_id === client_id) {
-                statusEl.className = 'status winner';
-                statusEl.textContent = `🎉 恭喜你抢答成功！响应时间：${winner.response_time}ms`;
-            } else {
-                statusEl.className = 'status loser';
-                statusEl.textContent = `❌ ${winner.name} 抢答成功，你未抢到`;
-            }
-            answerBtn.disabled = true;
-        });
-        
-        // 接收抢答重置通知
-        socket.on('game_reset', () => {
-            statusEl.className = 'status waiting';
-            statusEl.textContent = '等待主持人开始抢答...';
-            answerBtn.disabled = true;
         });
     </script>
 </body>

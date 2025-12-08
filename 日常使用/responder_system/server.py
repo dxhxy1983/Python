@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request  # 修复：添加request导入
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import time
 from datetime import datetime
@@ -31,11 +31,21 @@ def client_page():
 # 客户端连接事件
 @socketio.on('connect')
 def handle_connect():
-    global game_state  # 明确使用全局变量
+    global game_state
     client_id = request.sid  # 获取客户端唯一ID
     game_state["client_count"] = len(game_state["connected_clients"]) + 1
+    
+    # 生成不重复的默认名称
+    base_name = f"选手{game_state['client_count']}号"
+    new_name = base_name
+    counter = 1
+    # 检查默认名称是否重复，重复则添加序号
+    while any(client["name"] == new_name for client in game_state["connected_clients"].values()):
+        new_name = f"选手{game_state['client_count']}号({counter})"
+        counter += 1
+    
     game_state["connected_clients"][client_id] = {
-        "name": f"选手{game_state['client_count']}号",  # 默认名称
+        "name": new_name,  # 使用不重复的默认名称
         "join_time": datetime.now().strftime("%H:%M:%S")
     }
     
@@ -66,31 +76,48 @@ def handle_disconnect():
             "count": game_state["client_count"]
         }, broadcast=True)
 
-# 客户端修改名称
+# 客户端修改名称（增加重名检测）
 @socketio.on('set_name')
 def handle_set_name(data):
     global game_state
     client_id = request.sid
     new_name = data.get("name", "").strip()
-    if new_name and len(new_name) <= 10 and client_id in game_state["connected_clients"]:
-        old_name = game_state["connected_clients"][client_id]["name"]
-        game_state["connected_clients"][client_id]["name"] = new_name
-        print(f"📛 客户端重命名：{client_id} {old_name} -> {new_name}")
-        # 广播给所有客户端更新列表
-        emit('update_clients', {
-            "clients": game_state["connected_clients"],
-            "count": game_state["client_count"]
-        }, broadcast=True)
-        # 给当前客户端返回确认反馈
-        emit('name_set_success', {
-            "new_name": new_name,
-            "message": "名称修改成功！"
-        })
-    else:
-        # 返回错误反馈
+    
+    # 校验名称合法性
+    if not new_name or len(new_name) > 10:
         emit('name_set_failed', {
             "message": "名称不能为空且长度不能超过10字！"
         })
+        return
+    
+    # 重名检测：检查除当前客户端外的其他客户端是否已使用该名称
+    is_duplicate = False
+    for cid, client_info in game_state["connected_clients"].items():
+        if cid != client_id and client_info["name"] == new_name:
+            is_duplicate = True
+            break
+    
+    if is_duplicate:
+        # 重名则返回失败提示
+        emit('name_set_failed', {
+            "message": f"名称「{new_name}」已被占用，请更换！"
+        })
+        return
+    
+    # 名称合法且不重复，更新名称
+    old_name = game_state["connected_clients"][client_id]["name"]
+    game_state["connected_clients"][client_id]["name"] = new_name
+    print(f"📛 客户端重命名：{client_id} {old_name} -> {new_name}")
+    # 广播给所有客户端更新列表
+    emit('update_clients', {
+        "clients": game_state["connected_clients"],
+        "count": game_state["client_count"]
+    }, broadcast=True)
+    # 给当前客户端返回确认反馈
+    emit('name_set_success', {
+        "new_name": new_name,
+        "message": "名称修改成功！"
+    })
 
 # 主持人开始抢答
 @socketio.on('start_game')
